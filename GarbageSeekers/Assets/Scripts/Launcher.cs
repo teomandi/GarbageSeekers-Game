@@ -13,6 +13,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] TMP_InputField roomNameInputField;
     [SerializeField] TMP_Text errorText;
     [SerializeField] TMP_Text roomNameText;
+    [SerializeField] TMP_Text playerCountText;
     [SerializeField] Transform roomListContent;
     [SerializeField] GameObject roomListItemPrefab;
     [SerializeField] Transform playerListContent;
@@ -73,6 +74,7 @@ public class Launcher : MonoBehaviourPunCallbacks
             Instantiate(playerListItemPrefab, playerListContent).GetComponent<PlayerListItem>().Setup(players[i]);
         }
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
+        playerCountText.text = "Players: " + PhotonNetwork.PlayerList.Length + "/4";
     }
 
     public override void OnCreateRoomFailed(short returnCode, string message)
@@ -87,6 +89,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         base.OnPlayerEnteredRoom(newPlayer);
         Instantiate(playerListItemPrefab, playerListContent).GetComponent<PlayerListItem>().Setup(newPlayer);
+        playerCountText.text = "Players: " + PhotonNetwork.PlayerList.Length + "/4";
     }
 
     public override void OnMasterClientSwitched(Player newMasterClient) //when the master leaves
@@ -129,6 +132,8 @@ public class Launcher : MonoBehaviourPunCallbacks
         for (int i = 0; i < roomList.Count; i++)
         {
             if (roomList[i].RemovedFromList)
+                continue;
+            if (roomList[i].PlayerCount == 4) //room is full
                 continue;
             Instantiate(roomListItemPrefab, roomListContent).GetComponent<RoomListItem>().Setup(roomList[i]);
         }

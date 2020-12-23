@@ -96,7 +96,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
     public void SetGroundedState(bool _grounded)
     {
         grounded = _grounded;
-        Debug.Log("gounded? : " + grounded);
     }
     private void FixedUpdate()
     {
