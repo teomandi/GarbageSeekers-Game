@@ -29,24 +29,26 @@ public class PlayerController : MonoBehaviourPunCallbacks
     }
     private void Start()
     {
+        Debug.Log("pv mine?: " + PV.IsMine);
         if (PV.IsMine)
         {
             EquipItem(0);
         }
-        else
+/*        else
         {
             Destroy(GetComponentInChildren<Camera>().gameObject);
             Destroy(rb);
-        }
+        }*/
     }
 
     private void Update()
     {
-        if (!PV.IsMine)
-            return;
+/*        if (!PV.IsMine)
+            return;*/
         Look();
         Move();
         Jump();
+        Fire();
 
         //items handle from numbers
         for (int i = 0; i < items.Length; i++)
@@ -86,6 +88,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         Vector3 moveDir = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized;
         moveAmount = Vector3.SmoothDamp(moveAmount, moveDir * (Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : walkSpeed), ref smoothMoveVelocity, smoothTime);
     }
+
     private void Jump()
     {
         if (Input.GetKeyDown(KeyCode.Space) && grounded)
@@ -93,14 +96,29 @@ public class PlayerController : MonoBehaviourPunCallbacks
             rb.AddForce(transform.up * jumpForce);
         }
     }
+
+    private void Fire()
+    {
+        ItemController itemController = items[itemIndex].GetComponent<Item>().itemGameObject.GetComponent<ItemController>();
+        if (Input.GetButtonDown("Fire1"))
+        {
+            itemController.StartInteraction();
+        }
+        if (Input.GetButtonUp("Fire1"))
+        {
+            itemController.StopInteraction();
+        }
+    }
+
     public void SetGroundedState(bool _grounded)
     {
         grounded = _grounded;
     }
+
     private void FixedUpdate()
     {
-        if (!PV.IsMine)
-            return;
+/*        if (!PV.IsMine)
+            return;*/
         rb.MovePosition(rb.position + transform.TransformDirection(moveAmount) * Time.fixedDeltaTime);
     }
 
@@ -124,6 +142,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
             PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
         }
     }
+
     //to share the weapon change among the other players
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, HashTable changedProps)
     {
