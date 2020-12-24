@@ -121,12 +121,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!198 &98811848 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 8627650089303959645, guid: 41edbb8d2db25c946aa90d3d9ba30546,
-    type: 3}
-  m_PrefabInstance: {fileID: 961775558}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &428219058
 GameObject:
   m_ObjectHideFlags: 0
@@ -500,6 +494,46 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerController
       objectReference: {fileID: 0}
+    - target: {fileID: 7471961082185920585, guid: 41edbb8d2db25c946aa90d3d9ba30546,
+        type: 3}
+      propertyPath: mask.m_Bits
+      value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 7471961082185920585, guid: 41edbb8d2db25c946aa90d3d9ba30546,
+        type: 3}
+      propertyPath: range
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7471961082185920585, guid: 41edbb8d2db25c946aa90d3d9ba30546,
+        type: 3}
+      propertyPath: icedMat
+      value: 
+      objectReference: {fileID: 2100000, guid: a85975a606df8ed469796049c08762d1, type: 2}
+    - target: {fileID: 7471961082185920585, guid: 41edbb8d2db25c946aa90d3d9ba30546,
+        type: 3}
+      propertyPath: icedMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: a85975a606df8ed469796049c08762d1, type: 2}
+    - target: {fileID: 7953244097413155872, guid: 41edbb8d2db25c946aa90d3d9ba30546,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.017007416
+      objectReference: {fileID: 0}
+    - target: {fileID: 7953244097413155872, guid: 41edbb8d2db25c946aa90d3d9ba30546,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.9998554
+      objectReference: {fileID: 0}
+    - target: {fileID: 7953244097413155872, guid: 41edbb8d2db25c946aa90d3d9ba30546,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7953244097413155872, guid: 41edbb8d2db25c946aa90d3d9ba30546,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -1.949
+      objectReference: {fileID: 0}
     - target: {fileID: 8627650089303959645, guid: 41edbb8d2db25c946aa90d3d9ba30546,
         type: 3}
       propertyPath: moveWithTransform
@@ -600,25 +634,6 @@ Transform:
   m_Father: {fileID: 851784024}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1355408180 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4126754880358974007, guid: 41edbb8d2db25c946aa90d3d9ba30546,
-    type: 3}
-  m_PrefabInstance: {fileID: 961775558}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1355408182
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1355408180}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c5ff7423ce5d7544d913caf9eb31b842, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  visualEffect: {fileID: 98811848}
 --- !u!1 &1735135077
 GameObject:
   m_ObjectHideFlags: 0

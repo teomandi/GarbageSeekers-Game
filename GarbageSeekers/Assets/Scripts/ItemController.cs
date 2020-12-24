@@ -5,12 +5,12 @@ using UnityEngine;
 public class ItemController : MonoBehaviour
 {
     [SerializeField] ParticleSystem visualEffect;
-    public void StartInteraction()
+    public virtual void StartInteraction()
     {
         if (visualEffect != null)
             visualEffect.Play();
     }
-    public void StopInteraction()
+    public virtual void StopInteraction()
     {
         if (visualEffect != null)
             visualEffect.Stop();
