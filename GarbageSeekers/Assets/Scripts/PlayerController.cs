@@ -30,6 +30,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     private void Start()
     {
         Debug.Log("pv mine?: " + PV.IsMine);
+        EquipItem(0); //delete that
         if (PV.IsMine)
         {
             EquipItem(0);
