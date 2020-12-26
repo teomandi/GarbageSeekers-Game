@@ -10,6 +10,9 @@ public class PlayerController : MonoBehaviourPunCallbacks
     [SerializeField] GameObject cameraHolder;
     [SerializeField] float mouseSensitivity, sprintSpeed, walkSpeed, jumpForce, smoothTime;
     [SerializeField] Item[] items;
+    [SerializeField] HealthBar healthBar;
+
+    public int health = 100;
 
     int itemIndex;
     int previousItemIndex = -1;
@@ -29,8 +32,9 @@ public class PlayerController : MonoBehaviourPunCallbacks
     }
     private void Start()
     {
-        Debug.Log("pv mine?: " + PV.IsMine);
+        healthBar.SetMaxHealth(health);
         EquipItem(0); //delete that
+
         if (PV.IsMine)
         {
             EquipItem(0);
@@ -50,6 +54,13 @@ public class PlayerController : MonoBehaviourPunCallbacks
         Move();
         Jump();
         Fire();
+
+        if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            health -= 5;
+            healthBar.SetHealth(health);
+            Debug.Log("Health decresed");
+        }
 
         //items handle from numbers
         for (int i = 0; i < items.Length; i++)
