@@ -12,7 +12,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
     [SerializeField] Item[] items;
     [SerializeField] HealthBar healthBar;
 
-    public int health = 100;
+    [SerializeField] int maxHealth = 100;
+    [SerializeField] int currentHealth;
 
     int itemIndex;
     int previousItemIndex = -1;
@@ -32,7 +33,10 @@ public class PlayerController : MonoBehaviourPunCallbacks
     }
     private void Start()
     {
-        healthBar.SetMaxHealth(health);
+        healthBar.SetMaxHealth(maxHealth);
+        currentHealth = maxHealth;
+        Cursor.lockState = CursorLockMode.Locked;
+        
         EquipItem(0); //delete that
 
         if (PV.IsMine)
@@ -54,12 +58,9 @@ public class PlayerController : MonoBehaviourPunCallbacks
         Move();
         Jump();
         Fire();
-
         if (Input.GetKeyUp(KeyCode.LeftShift))
         {
-            health -= 5;
-            healthBar.SetHealth(health);
-            Debug.Log("Health decresed");
+            TakeDamage(10);
         }
 
         //items handle from numbers
@@ -114,6 +115,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         ItemController itemController = items[itemIndex].GetComponent<Item>().itemGameObject.GetComponent<ItemController>();
         if (Input.GetButtonDown("Fire1"))
         {
+            Debug.Log("fire 1 down");
             itemController.StartInteraction();
         }
         if (Input.GetButtonUp("Fire1"))
@@ -155,6 +157,16 @@ public class PlayerController : MonoBehaviourPunCallbacks
         }
     }
 
+    public void TakeDamage(int _damage)
+    {
+        currentHealth -= _damage;
+        healthBar.SetHealth(currentHealth);
+        if(currentHealth <= 0)
+        {
+            Die();
+        }
+    }
+
     //to share the weapon change among the other players
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, HashTable changedProps)
     {
@@ -162,5 +174,10 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
         if (!PV.IsMine && targetPlayer == PV.Owner)
             EquipItem((int)changedProps["itemIndex"]);
+    }
+
+    public void Die()
+    {
+        Debug.Log("You are dead!!!!");
     }
 }

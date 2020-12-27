@@ -6,24 +6,27 @@ public class FreezerController : ItemController
 {
     public float range;
 
-    [SerializeField] LayerMask mask;
-    [SerializeField] Material icedMaterial;
-
-
     public void Update()
     {
-        Debug.DrawRay(transform.position, transform.forward * 10, Color.green);
+        Debug.DrawRay(transform.position, transform.forward * range, Color.green);
     }
     public override void StartInteraction()
     {
         base.StartInteraction();
 
         RaycastHit _hit;
-        if (Physics.Raycast(transform.position, transform.forward, out _hit, range, mask))
+        if (Physics.Raycast(transform.position, transform.forward, out _hit, range))
         {
             Debug.Log("You hit " + _hit.transform.name);
             // we hit somehting
-            _hit.transform.gameObject.GetComponent<Renderer>().material = icedMaterial;
+            if(_hit.transform.tag == "freezable")
+            {
+                _hit.transform.GetComponent<ItemInteraction>().Freeze();
+            }
+            else if (_hit.transform.tag == "enemy")
+            {
+                _hit.transform.GetComponent<EnemyController>().Freeze();
+            }
         }
     }
 }
