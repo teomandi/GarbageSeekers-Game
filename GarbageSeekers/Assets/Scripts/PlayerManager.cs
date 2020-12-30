@@ -7,7 +7,6 @@ using System.IO;
 public class PlayerManager : MonoBehaviour
 {
     PhotonView PV;
-    [SerializeField] GameObject healthBarGO;
 
     private void Awake()
     {

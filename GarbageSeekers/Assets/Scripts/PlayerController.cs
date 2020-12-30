@@ -119,7 +119,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
             if (PV.IsMine)
             {
                 HashTable hash = new HashTable();
-                hash.Add("freezing", true);
+                hash.Add("freezing_beam", true);
                 PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
             }
         }
@@ -127,7 +127,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         {
             itemController.StopInteraction();
             HashTable hash = new HashTable();
-            hash.Add("freezing", false);
+            hash.Add("freezing_beam", false);
             PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
         }
     }
@@ -185,12 +185,12 @@ public class PlayerController : MonoBehaviourPunCallbacks
             if(changedProps.ContainsKey("itemIndex"))
                 EquipItem((int)changedProps["itemIndex"]);
 
-            if (changedProps.ContainsKey("freezing"))
+            if (changedProps.ContainsKey("freezing_beam"))
             {
 
                 ItemController itemController = items[itemIndex].GetComponent<Item>().itemGameObject.GetComponent<ItemController>();
                 if (itemController != null)
-                    if ((bool)changedProps["freezing"])
+                    if ((bool)changedProps["freezing_beam"])
                     {
                         itemController.StartInteraction();
                     }
@@ -228,4 +228,5 @@ public class PlayerController : MonoBehaviourPunCallbacks
         healthBar.SetMaxHealth(maxHealth);
         currentHealth = maxHealth;
     }
+
 }

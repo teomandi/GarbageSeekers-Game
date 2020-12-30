@@ -11,7 +11,6 @@ public class EnemyController : MonoBehaviour
     [SerializeField] Material myMaterial;
     [SerializeField] AnimationClip attakAnimation;
 
-    Transform target;
     NavMeshAgent agent;
     bool isFreezed, isAttacking;
 
@@ -27,8 +26,13 @@ public class EnemyController : MonoBehaviour
     {
         if (isFreezed)
             return;
+
+        Transform target = GetClosestPlayer();
+        if (target == null)
+            return;
         float distance = Vector3.Distance(transform.position, target.position);
-        if(distance <= lookRadius)
+
+        if (distance <= lookRadius)
         {
             agent.SetDestination(target.position);
 
@@ -42,7 +46,7 @@ public class EnemyController : MonoBehaviour
                     isAttacking = true;
                 }
                 //face the target
-                FaceTarget();
+                FaceTarget(target);
             }
             else
             {
@@ -53,7 +57,29 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    void FaceTarget()
+
+    Transform GetClosestPlayer()
+    {
+        GameObject[] players = GameObject.FindGameObjectsWithTag("player"); //maybe in start (?) maybe each player registers himself (?) maybe use a list (?)
+        if (players.Length == 0)
+            return null;
+        GameObject closestPlayer = players[0];
+        float minDistance = float.MaxValue, distance;
+        foreach (GameObject player in players)
+        {
+            distance = Vector3.Distance(transform.position, player.transform.position);
+            if(distance < minDistance)
+            {
+                closestPlayer = player;
+                minDistance = distance;
+            }
+        }
+        return closestPlayer.transform;
+    }
+
+
+
+    void FaceTarget(Transform target)
     {
         Vector3 direction = (target.position - transform.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
@@ -66,12 +92,14 @@ public class EnemyController : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, lookRadius);
     }
 
-    private void Attack()
+    private void Attack(Transform target)
     {
         Debug.Log("Attack!!!");
         isAttacking = true;
         target.GetComponent<PlayerController>().TakeDamage(10);
     }
+
+
     public void Freeze()
     {
         agent.isStopped = true;

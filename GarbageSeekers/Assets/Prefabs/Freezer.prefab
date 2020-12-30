@@ -707,7 +707,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   visualEffect: {fileID: 448988437546141607}
-  range: 0
+  range: 17
 --- !u!1 &7003500310066362800
 GameObject:
   m_ObjectHideFlags: 0
