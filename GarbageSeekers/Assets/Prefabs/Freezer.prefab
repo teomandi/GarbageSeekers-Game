@@ -708,10 +708,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   visualEffect: {fileID: 448988437546141607}
   range: 0
-  mask:
-    serializedVersion: 2
-    m_Bits: 0
-  icedMaterial: {fileID: 0}
 --- !u!1 &7003500310066362800
 GameObject:
   m_ObjectHideFlags: 0
@@ -1003,7 +999,7 @@ ParticleSystem:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  moveWithTransform: 0
+  moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
   randomSeed: 0

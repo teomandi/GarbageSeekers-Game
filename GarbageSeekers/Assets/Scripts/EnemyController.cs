@@ -17,7 +17,7 @@ public class EnemyController : MonoBehaviour
 
     void Start()
     {
-        target = PlayerTracker.instance.player.transform;
+        //target = PlayerTracker.instance.player.transform;
         agent = GetComponent<NavMeshAgent>();
         isFreezed = false;
         isAttacking = false;

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - freezable
   - enemy
+  - Canvas
   layers:
   - Default
   - TransparentFX

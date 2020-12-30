@@ -10,8 +10,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
     [SerializeField] GameObject cameraHolder;
     [SerializeField] float mouseSensitivity, sprintSpeed, walkSpeed, jumpForce, smoothTime;
     [SerializeField] Item[] items;
-    [SerializeField] HealthBar healthBar;
-
     [SerializeField] int maxHealth = 100;
     [SerializeField] int currentHealth;
 
@@ -26,6 +24,10 @@ public class PlayerController : MonoBehaviourPunCallbacks
     Rigidbody rb;
     PhotonView PV;
 
+    HealthBar healthBar;
+    [SerializeField] GameObject healthBarPrefab;
+    [SerializeField] GameObject crossHairPrefab;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -33,33 +35,31 @@ public class PlayerController : MonoBehaviourPunCallbacks
     }
     private void Start()
     {
-        healthBar.SetMaxHealth(maxHealth);
-        currentHealth = maxHealth;
-        Cursor.lockState = CursorLockMode.Locked;
-        
-        EquipItem(0); //delete that
-
         if (PV.IsMine)
         {
+            /*Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;*/
+            SetupPlayerUI();
             EquipItem(0);
         }
-/*        else
+        else
         {
             Destroy(GetComponentInChildren<Camera>().gameObject);
             Destroy(rb);
-        }*/
+        }
     }
 
     private void Update()
     {
-/*        if (!PV.IsMine)
-            return;*/
+        if (!PV.IsMine)
+            return;
         Look();
         Move();
         Jump();
         Fire();
         if (Input.GetKeyUp(KeyCode.LeftShift))
         {
+            Debug.Log("Take Damage");
             TakeDamage(10);
         }
 
@@ -115,12 +115,20 @@ public class PlayerController : MonoBehaviourPunCallbacks
         ItemController itemController = items[itemIndex].GetComponent<Item>().itemGameObject.GetComponent<ItemController>();
         if (Input.GetButtonDown("Fire1"))
         {
-            Debug.Log("fire 1 down");
             itemController.StartInteraction();
+            if (PV.IsMine)
+            {
+                HashTable hash = new HashTable();
+                hash.Add("freezing", true);
+                PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
+            }
         }
         if (Input.GetButtonUp("Fire1"))
         {
             itemController.StopInteraction();
+            HashTable hash = new HashTable();
+            hash.Add("freezing", false);
+            PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
         }
     }
 
@@ -131,8 +139,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     private void FixedUpdate()
     {
-/*        if (!PV.IsMine)
-            return;*/
+        if (!PV.IsMine)
+            return;
         rb.MovePosition(rb.position + transform.TransformDirection(moveAmount) * Time.fixedDeltaTime);
     }
 
@@ -173,11 +181,51 @@ public class PlayerController : MonoBehaviourPunCallbacks
         base.OnPlayerPropertiesUpdate(targetPlayer, changedProps);
 
         if (!PV.IsMine && targetPlayer == PV.Owner)
-            EquipItem((int)changedProps["itemIndex"]);
+        {
+            if(changedProps.ContainsKey("itemIndex"))
+                EquipItem((int)changedProps["itemIndex"]);
+
+            if (changedProps.ContainsKey("freezing"))
+            {
+
+                ItemController itemController = items[itemIndex].GetComponent<Item>().itemGameObject.GetComponent<ItemController>();
+                if (itemController != null)
+                    if ((bool)changedProps["freezing"])
+                    {
+                        itemController.StartInteraction();
+                    }
+                    else
+                    {
+                        itemController.StopInteraction();
+                    }
+            }
+        }
     }
 
     public void Die()
     {
         Debug.Log("You are dead!!!!");
+    }
+
+    //sets up the players UI
+    void SetupPlayerUI()
+    {
+        //show health-bar
+        Vector3 healtBarOffset = new Vector3(-55, -30, 0);
+        GameObject healthBarObject = Instantiate(healthBarPrefab, healtBarOffset, Quaternion.identity) as GameObject;
+        healthBarObject.transform.SetParent(GameObject.FindGameObjectWithTag("Canvas").transform, false);
+        this.InitHealthBar(healthBarObject.GetComponent<HealthBar>());
+
+        //show crosshair
+        GameObject crossHaiObject = Instantiate(crossHairPrefab, Vector3.zero, Quaternion.identity) as GameObject;
+        crossHaiObject.transform.SetParent(GameObject.FindGameObjectWithTag("Canvas").transform, false);
+    }
+
+
+    void InitHealthBar(HealthBar _healthbar)
+    {
+        healthBar = _healthbar;
+        healthBar.SetMaxHealth(maxHealth);
+        currentHealth = maxHealth;
     }
 }
