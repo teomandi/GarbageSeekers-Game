@@ -10,6 +10,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
     [SerializeField] GameObject cameraHolder;
     [SerializeField] float mouseSensitivity, sprintSpeed, walkSpeed, jumpForce, smoothTime;
     [SerializeField] Item[] items;
+    [SerializeField] int maxHealth = 100;
+    [SerializeField] int currentHealth;
 
     int itemIndex;
     int previousItemIndex = -1;
@@ -22,6 +24,10 @@ public class PlayerController : MonoBehaviourPunCallbacks
     Rigidbody rb;
     PhotonView PV;
 
+    HealthBar healthBar;
+    [SerializeField] GameObject healthBarPrefab;
+    [SerializeField] GameObject crossHairPrefab;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -29,11 +35,16 @@ public class PlayerController : MonoBehaviourPunCallbacks
     }
     private void Start()
     {
+/*        SetupPlayerUI(); //<-------------------------del that
+        EquipItem(0);*/
         if (PV.IsMine)
         {
+            /*Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;*/
+            SetupPlayerUI();
             EquipItem(0);
         }
-        else
+        else //<-------------------------
         {
             Destroy(GetComponentInChildren<Camera>().gameObject);
             Destroy(rb);
@@ -42,11 +53,17 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     private void Update()
     {
-        if (!PV.IsMine)
+        if (!PV.IsMine) //<-------------------------
             return;
         Look();
         Move();
         Jump();
+        Fire();
+        if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            Debug.Log("Take Damage");
+            TakeDamage(10);
+        }
 
         //items handle from numbers
         for (int i = 0; i < items.Length; i++)
@@ -86,6 +103,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         Vector3 moveDir = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized;
         moveAmount = Vector3.SmoothDamp(moveAmount, moveDir * (Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : walkSpeed), ref smoothMoveVelocity, smoothTime);
     }
+
     private void Jump()
     {
         if (Input.GetKeyDown(KeyCode.Space) && grounded)
@@ -93,13 +111,40 @@ public class PlayerController : MonoBehaviourPunCallbacks
             rb.AddForce(transform.up * jumpForce);
         }
     }
+
+    private void Fire()
+    {
+        ItemController itemController = items[itemIndex].GetComponent<Item>().itemGameObject.GetComponent<ItemController>();
+        if (Input.GetButtonDown("Fire1"))
+        {
+            itemController.StartInteraction();
+            if (PV.IsMine)
+            {
+                HashTable hash = new HashTable();
+                hash.Add("freezing_beam", true);
+                PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
+            }
+        }
+        if (Input.GetButtonUp("Fire1"))
+        {
+            itemController.StopInteraction();
+            if (PV.IsMine)
+            {
+                HashTable hash = new HashTable();
+                hash.Add("freezing_beam", false);
+                PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
+            }
+        }
+    }
+
     public void SetGroundedState(bool _grounded)
     {
         grounded = _grounded;
     }
+
     private void FixedUpdate()
     {
-        if (!PV.IsMine)
+        if (!PV.IsMine)  //<-------------------------
             return;
         rb.MovePosition(rb.position + transform.TransformDirection(moveAmount) * Time.fixedDeltaTime);
     }
@@ -124,12 +169,69 @@ public class PlayerController : MonoBehaviourPunCallbacks
             PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
         }
     }
+
+    public void TakeDamage(int _damage)
+    {
+        currentHealth -= _damage;
+        healthBar.SetHealth(currentHealth);
+        if(currentHealth <= 0)
+        {
+            Die();
+        }
+    }
+
     //to share the weapon change among the other players
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, HashTable changedProps)
     {
         base.OnPlayerPropertiesUpdate(targetPlayer, changedProps);
 
         if (!PV.IsMine && targetPlayer == PV.Owner)
-            EquipItem((int)changedProps["itemIndex"]);
+        {
+            if(changedProps.ContainsKey("itemIndex"))
+                EquipItem((int)changedProps["itemIndex"]);
+
+            if (changedProps.ContainsKey("freezing_beam"))
+            {
+
+                ItemController itemController = items[itemIndex].GetComponent<Item>().itemGameObject.GetComponent<ItemController>();
+                if (itemController != null)
+                    if ((bool)changedProps["freezing_beam"])
+                    {
+                        itemController.StartInteraction();
+                    }
+                    else
+                    {
+                        itemController.StopInteraction();
+                    }
+            }
+        }
     }
+
+    public void Die()
+    {
+        Debug.Log("You are dead!!!!");
+    }
+
+    //sets up the players UI
+    void SetupPlayerUI()
+    {
+        //show health-bar
+        Vector3 healtBarOffset = new Vector3(-55, -30, 0);
+        GameObject healthBarObject = Instantiate(healthBarPrefab, healtBarOffset, Quaternion.identity) as GameObject;
+        healthBarObject.transform.SetParent(GameObject.FindGameObjectWithTag("Canvas").transform, false);
+        this.InitHealthBar(healthBarObject.GetComponent<HealthBar>());
+
+        //show crosshair
+        GameObject crossHaiObject = Instantiate(crossHairPrefab, Vector3.zero, Quaternion.identity) as GameObject;
+        crossHaiObject.transform.SetParent(GameObject.FindGameObjectWithTag("Canvas").transform, false);
+    }
+
+
+    void InitHealthBar(HealthBar _healthbar)
+    {
+        healthBar = _healthbar;
+        healthBar.SetMaxHealth(maxHealth);
+        currentHealth = maxHealth;
+    }
+
 }
