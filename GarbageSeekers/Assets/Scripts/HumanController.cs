@@ -3,31 +3,41 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemyController : MonoBehaviour
+[RequireComponent(typeof(NavMeshAgent))]
+[RequireComponent(typeof(Animator))]
+public class HumanController : MonoBehaviour
 {
     public float lookRadius = 10f;
-    [SerializeField] int freezedDuration;
-    [SerializeField] Material icedMaterial;
-    [SerializeField] Material myMaterial;
-    [SerializeField] AnimationClip attakAnimation;
 
+    Animator animator;
     NavMeshAgent agent;
-    bool isFreezed, isAttacking;
+    Transform currentTarget;
+
+    bool isAttacking;
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, lookRadius);
+    }
 
     void Start()
     {
-        //target = PlayerTracker.instance.player.transform;
+        animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
-        isFreezed = false;
         isAttacking = false;
+
+        //idle
+        animator.SetInteger("legs", 5);
+        animator.SetInteger("arms", 5);
     }
 
     void Update()
     {
-        if (isFreezed)
-            return;
-
+/*        if (isFreezed)
+            return;*/
         Transform target = GetClosestPlayer();
+        currentTarget = target;
         if (target == null)
             return;
         float distance = Vector3.Distance(transform.position, target.position);
@@ -35,15 +45,17 @@ public class EnemyController : MonoBehaviour
         if (distance <= lookRadius)
         {
             agent.SetDestination(target.position);
+            animator.SetInteger("legs", 1);
+            animator.SetInteger("arms", 1);
 
-            if(distance <= agent.stoppingDistance + 1)
+            if (distance <= agent.stoppingDistance + 1)
             {
                 Debug.Log("In stopping distance");
                 //attack the target
                 if (!isAttacking)
                 {
-                    InvokeRepeating("Attack", .5f, 1f);
                     isAttacking = true;
+                    InvokeRepeating("Attack", .5f, 1f);
                 }
                 //face the target
                 FaceTarget(target);
@@ -51,9 +63,13 @@ public class EnemyController : MonoBehaviour
             else
             {
                 isAttacking = false;
-                if(!isFreezed)
-                    CancelInvoke(); //buggy!!
+                CancelInvoke();
             }
+        }
+        else
+        {
+            animator.SetInteger("legs", 5);
+            animator.SetInteger("arms", 5);
         }
     }
 
@@ -78,40 +94,29 @@ public class EnemyController : MonoBehaviour
     }
 
 
-
     void FaceTarget(Transform target)
     {
         Vector3 direction = (target.position - transform.position).normalized;
-        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x + 90, 0, direction.z));
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5);
     }
 
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, lookRadius);
-    }
 
-    private void Attack(Transform target)
+    private void Attack(/*Transform target*/)
     {
-        Debug.Log("Attack!!!");
         isAttacking = true;
-        target.GetComponent<PlayerController>().TakeDamage(10);
+        animator.SetInteger("arms", 14);
+        if(currentTarget!=null)
+            currentTarget.GetComponent<PlayerController>().TakeDamage(10);
+        Debug.Log("Attack!!!");
     }
 
-
-    public void Freeze()
+    public void applyStop(bool _isStopped)
     {
-        agent.isStopped = true;
-        isFreezed = true;
-        GetComponentInChildren<Renderer>().material = icedMaterial;
-        Invoke("UnFreeze", freezedDuration);
-    }
-
-    private void UnFreeze()
-    {
-        agent.isStopped = false;
-        isFreezed = false;
-        GetComponentInChildren<Renderer>().material = myMaterial;
+        agent.isStopped = _isStopped;
+        if (!_isStopped)
+            animator.StopPlayback();
+        else
+            animator.StartPlayback();
     }
 }

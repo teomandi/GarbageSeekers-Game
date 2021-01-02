@@ -35,6 +35,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
     }
     private void Start()
     {
+/*        SetupPlayerUI(); //<-------------------------del that
+        EquipItem(0);*/
         if (PV.IsMine)
         {
             /*Cursor.lockState = CursorLockMode.Locked;
@@ -42,7 +44,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
             SetupPlayerUI();
             EquipItem(0);
         }
-        else
+        else //<-------------------------
         {
             Destroy(GetComponentInChildren<Camera>().gameObject);
             Destroy(rb);
@@ -51,7 +53,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     private void Update()
     {
-        if (!PV.IsMine)
+        if (!PV.IsMine) //<-------------------------
             return;
         Look();
         Move();
@@ -126,9 +128,12 @@ public class PlayerController : MonoBehaviourPunCallbacks
         if (Input.GetButtonUp("Fire1"))
         {
             itemController.StopInteraction();
-            HashTable hash = new HashTable();
-            hash.Add("freezing_beam", false);
-            PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
+            if (PV.IsMine)
+            {
+                HashTable hash = new HashTable();
+                hash.Add("freezing_beam", false);
+                PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
+            }
         }
     }
 
@@ -139,7 +144,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     private void FixedUpdate()
     {
-        if (!PV.IsMine)
+        if (!PV.IsMine)  //<-------------------------
             return;
         rb.MovePosition(rb.position + transform.TransformDirection(moveAmount) * Time.fixedDeltaTime);
     }

@@ -21,11 +21,11 @@ public class FreezerController : ItemController
             // we hit somehting
             if(_hit.transform.tag == "freezable")
             {
-                _hit.transform.GetComponent<ItemInteraction>().Freeze();
+                _hit.transform.GetComponent<ItemFreeze>().Freeze();
             }
-            else if (_hit.transform.tag == "enemy")
+            else if (_hit.transform.tag == "human")
             {
-                _hit.transform.GetComponent<EnemyController>().Freeze();
+                _hit.transform.GetComponent<HumanFreeze>().Freeze();
             }
         }
     }

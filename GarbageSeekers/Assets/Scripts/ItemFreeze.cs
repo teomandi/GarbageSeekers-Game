@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ItemInteraction : MonoBehaviour
+public class ItemFreeze : MonoBehaviour
 {
     [SerializeField] int freezedDuration;
     [SerializeField] Material icedMaterial;
