@@ -7,13 +7,15 @@ using UnityEngine.AI;
 [RequireComponent(typeof(Animator))]
 public class HumanController : MonoBehaviour
 {
-    public float lookRadius = 10f;
+    [SerializeField] float lookRadius = 10f;
+    [SerializeField] string currentState;
+    [SerializeField] int attackRange;
 
     Animator animator;
     NavMeshAgent agent;
     Transform currentTarget;
-
     bool isAttacking;
+
 
     private void OnDrawGizmosSelected()
     {
@@ -27,49 +29,51 @@ public class HumanController : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         isAttacking = false;
 
-        //idle
-        animator.SetInteger("legs", 5);
-        animator.SetInteger("arms", 5);
+        SetState(currentState);
+
     }
 
     void Update()
     {
-        Transform target = GetClosestPlayer();
-        currentTarget = target;
-        if (target == null)
+        currentTarget = GetClosestPlayer();
+        if (currentTarget == null)
             return;
 
-
-        float distance = Vector3.Distance(transform.position, target.position);
-
+        
+        float distance = Vector3.Distance(transform.position, currentTarget.position);
         if (distance <= lookRadius)
         {
-            agent.SetDestination(target.position);
-
+            agent.SetDestination(currentTarget.position);
             if (!isAttacking)
             {
-                animator.SetInteger("legs", 1);
-                animator.SetInteger("arms", 1);
+                SetState("run");
             }
 
-            if (distance <= agent.stoppingDistance + 1)
+            if (distance <= agent.stoppingDistance + attackRange)
             {
                 //face the target
-                Debug.Log("In stoping distance");
-                FaceTarget(target);
+                FaceTarget(currentTarget);
 
                 //attack the target
                 if (!isAttacking)
                 {
-                    isAttacking = true;
+                    isAttacking = true; //there
                     InvokeRepeating("Attack", .5f, 1f);
                 }
             }
-/*            else
+            else
             {
                 isAttacking = false;
                 CancelInvoke();
-            }*/
+            }
+        }
+        else
+        {
+            if (currentState != "idle")
+            {
+                SetState("idle");
+                isAttacking = false;
+            }
         }
 
     }
@@ -105,9 +109,8 @@ public class HumanController : MonoBehaviour
 
     private void Attack(/*Transform target*/)
     {
-        isAttacking = true;
-        animator.SetInteger("arms", 14);
-        if(currentTarget!=null)
+        SetState("attack");
+        if (currentTarget!=null)
             currentTarget.GetComponent<PlayerController>().TakeDamage(10);
         Debug.Log("Attack!!!");
     }
@@ -117,10 +120,51 @@ public class HumanController : MonoBehaviour
         agent.isStopped = _isStopped;
         isAttacking = false;
         CancelInvoke();
+        agent.SetDestination(transform.position);
 
         if (!_isStopped)
             animator.StopPlayback();
         else
             animator.StartPlayback();
+    }
+
+    public void SetState(string _state)
+    {
+        switch (_state)
+        {
+            case "idle":
+                currentState = "idle";
+                animator.SetInteger("legs", 5);
+                animator.SetInteger("arms", 5);
+                break;
+            case "walk":
+                currentState = "idle"; //walking is also idle (like smoking or sitting)
+                animator.SetInteger("legs", 1);
+                animator.SetInteger("arms", 1);
+                break;
+            case "attack":
+                currentState = "attack";
+                animator.SetInteger("legs", 5);
+                animator.SetInteger("arms", 14);
+                break;
+            case "run":
+                currentState = "run";
+                animator.SetInteger("legs", 2);
+                animator.SetInteger("arms", 2);
+                break;
+            case "sit":
+                currentState = "idle"; //siting is also idle (like smoking or sometimes walking)
+                animator.SetInteger("legs", 3);
+                animator.SetInteger("arms", 3);
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    public void RandomWalk()
+    {
+        //set random points to walk to
     }
 }
