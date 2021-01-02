@@ -35,26 +35,29 @@ public class PlayerController : MonoBehaviourPunCallbacks
     }
     private void Start()
     {
-/*        SetupPlayerUI(); //<-------------------------del that
-        EquipItem(0);*/
+        SetupPlayerUI(); //<-------------------------only for test
+        EquipItem(0);
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
         if (PV.IsMine)
         {
-            /*Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;*/
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
             SetupPlayerUI();
             EquipItem(0);
         }
-        else //<-------------------------
+/*        else //<-------------------------
         {
             Destroy(GetComponentInChildren<Camera>().gameObject);
             Destroy(rb);
-        }
+        }*/
     }
 
     private void Update()
     {
-        if (!PV.IsMine) //<-------------------------
-            return;
+/*        if (!PV.IsMine) //<-------------------------
+            return;*/
         Look();
         Move();
         Jump();
@@ -144,8 +147,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     private void FixedUpdate()
     {
-        if (!PV.IsMine)  //<-------------------------
-            return;
+/*        if (!PV.IsMine)  //<-------------------------
+            return;*/
         rb.MovePosition(rb.position + transform.TransformDirection(moveAmount) * Time.fixedDeltaTime);
     }
 

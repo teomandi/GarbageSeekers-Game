@@ -34,43 +34,44 @@ public class HumanController : MonoBehaviour
 
     void Update()
     {
-/*        if (isFreezed)
-            return;*/
         Transform target = GetClosestPlayer();
         currentTarget = target;
         if (target == null)
             return;
+
+
         float distance = Vector3.Distance(transform.position, target.position);
 
         if (distance <= lookRadius)
         {
             agent.SetDestination(target.position);
-            animator.SetInteger("legs", 1);
-            animator.SetInteger("arms", 1);
+
+            if (!isAttacking)
+            {
+                animator.SetInteger("legs", 1);
+                animator.SetInteger("arms", 1);
+            }
 
             if (distance <= agent.stoppingDistance + 1)
             {
-                Debug.Log("In stopping distance");
+                //face the target
+                Debug.Log("In stoping distance");
+                FaceTarget(target);
+
                 //attack the target
                 if (!isAttacking)
                 {
                     isAttacking = true;
                     InvokeRepeating("Attack", .5f, 1f);
                 }
-                //face the target
-                FaceTarget(target);
             }
-            else
+/*            else
             {
                 isAttacking = false;
                 CancelInvoke();
-            }
+            }*/
         }
-        else
-        {
-            animator.SetInteger("legs", 5);
-            animator.SetInteger("arms", 5);
-        }
+
     }
 
 
@@ -97,7 +98,7 @@ public class HumanController : MonoBehaviour
     void FaceTarget(Transform target)
     {
         Vector3 direction = (target.position - transform.position).normalized;
-        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x + 90, 0, direction.z));
+        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5);
     }
 
@@ -114,6 +115,9 @@ public class HumanController : MonoBehaviour
     public void applyStop(bool _isStopped)
     {
         agent.isStopped = _isStopped;
+        isAttacking = false;
+        CancelInvoke();
+
         if (!_isStopped)
             animator.StopPlayback();
         else
