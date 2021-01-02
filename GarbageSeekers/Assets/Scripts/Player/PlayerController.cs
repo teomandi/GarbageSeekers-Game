@@ -173,7 +173,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
     public void TakeDamage(int _damage)
     {
         currentHealth -= _damage;
-        healthBar.SetHealth(currentHealth);
+        if(healthBar != null) //when hiting other players
+            healthBar.SetHealth(currentHealth);
         if(currentHealth <= 0)
         {
             Die();
