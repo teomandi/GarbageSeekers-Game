@@ -7,14 +7,19 @@ using UnityEngine.AI;
 [RequireComponent(typeof(Animator))]
 public class HumanController : MonoBehaviour
 {
-    [SerializeField] float lookRadius = 10f;
+    [SerializeField] float lookRadius = 10f, walkingSpeed=3.5f, runningSpeed = 5f;
     [SerializeField] string currentState;
     [SerializeField] int attackRange;
 
     Animator animator;
     NavMeshAgent agent;
     Transform currentTarget;
-    bool isAttacking;
+    bool isAttacking, isApplyingHobby;
+
+    // Hobby
+    [SerializeField] bool isWalking, isSiting, isRunning, isChilling;
+    [SerializeField] Transform movePointA, movePointB, relaxPoint;
+    Vector3 targetPoint;
 
 
     private void OnDrawGizmosSelected()
@@ -30,25 +35,25 @@ public class HumanController : MonoBehaviour
         isAttacking = false;
 
         SetState(currentState);
-
+        ValidateHobby();
     }
+
+
 
     void Update()
     {
         currentTarget = GetClosestPlayer();
         if (currentTarget == null)
             return;
-
-        
         float distance = Vector3.Distance(transform.position, currentTarget.position);
         if (distance <= lookRadius)
         {
+            isApplyingHobby = false;
             agent.SetDestination(currentTarget.position);
             if (!isAttacking)
             {
                 SetState("run");
             }
-
             if (distance <= agent.stoppingDistance + attackRange)
             {
                 //face the target
@@ -69,13 +74,19 @@ public class HumanController : MonoBehaviour
         }
         else
         {
-            if (currentState != "idle")
+            isAttacking = false;
+            if (!isApplyingHobby)
+                ApplyHobby();
+            else if(isRunning || isWalking)
             {
-                SetState("idle");
-                isAttacking = false;
+                float dist = Vector3.Distance(new Vector3(transform.position.x, 0, transform.position.z), new Vector3(targetPoint.x, 0, targetPoint.z));
+                if(dist <= agent.stoppingDistance)
+                {
+                    ChangeTargertPoint();
+                }
+
             }
         }
-
     }
 
 
@@ -120,13 +131,14 @@ public class HumanController : MonoBehaviour
         agent.isStopped = _isStopped;
         isAttacking = false;
         CancelInvoke();
-        agent.SetDestination(transform.position);
+        //agent.SetDestination(transform.position);
 
         if (!_isStopped)
             animator.StopPlayback();
         else
             animator.StartPlayback();
     }
+
 
     public void SetState(string _state)
     {
@@ -141,6 +153,7 @@ public class HumanController : MonoBehaviour
                 currentState = "idle"; //walking is also idle (like smoking or sitting)
                 animator.SetInteger("legs", 1);
                 animator.SetInteger("arms", 1);
+                agent.speed = walkingSpeed;
                 break;
             case "attack":
                 currentState = "attack";
@@ -151,6 +164,7 @@ public class HumanController : MonoBehaviour
                 currentState = "run";
                 animator.SetInteger("legs", 2);
                 animator.SetInteger("arms", 2);
+                agent.speed = runningSpeed;
                 break;
             case "sit":
                 currentState = "idle"; //siting is also idle (like smoking or sometimes walking)
@@ -163,8 +177,64 @@ public class HumanController : MonoBehaviour
         }
     }
 
-    public void RandomWalk()
+    void ValidateHobby() //error checking for hobby
     {
-        //set random points to walk to
+        if (isWalking || isRunning)
+        {
+            if (movePointA == null || movePointB == null)
+            {
+                Debug.LogError("Agent is not set correctly! Missing movePoing");
+                isChilling = true;
+                relaxPoint = transform;
+            }
+        }
+        else if (isChilling || isSiting)
+        {
+            if (relaxPoint == null)
+            {
+                Debug.LogError("Agent is not set correctly! Missing relaxPoint");
+                isChilling = true;
+                relaxPoint = transform;
+            }
+        }
+    }
+
+    void ApplyHobby()
+    {
+        isApplyingHobby = true;
+        Debug.Log("Apply Hobby");
+        if (isWalking || isRunning)
+        {
+            ApplyMoving();
+        }
+        else if (isChilling || isSiting)
+        {
+
+        }
+    }
+    void ApplyMoving()
+    {
+        float distanceA = Vector3.Distance(transform.position, movePointA.position);
+        float distanceB = Vector3.Distance(transform.position, movePointB.position);
+
+        targetPoint = distanceA < distanceB ? movePointA.position : movePointB.position;
+        agent.SetDestination(targetPoint);
+        Debug.Log("Dest set : " + distanceA + " " + distanceB + " " );
+        Debug.Log(targetPoint + " " + transform.position);
+        if (isWalking)
+            SetState("walk");
+        else if (isRunning)
+            SetState("run");
+    }
+
+    void ChangeTargertPoint()
+    {
+        targetPoint = targetPoint == movePointA.position ? movePointB.position : movePointA.position;
+        agent.SetDestination(targetPoint);
+    }
+
+    void ApplyResting()
+    {
+
     }
 }

@@ -64,7 +64,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
         Fire();
         if (Input.GetKeyUp(KeyCode.LeftShift))
         {
-            Debug.Log("Take Damage");
             TakeDamage(-10);
         }
 
