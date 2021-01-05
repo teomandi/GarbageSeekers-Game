@@ -38,8 +38,6 @@ public class HumanController : MonoBehaviour
         ValidateHobby();
     }
 
-
-
     void Update()
     {
         currentTarget = GetClosestPlayer();
@@ -84,11 +82,17 @@ public class HumanController : MonoBehaviour
                 {
                     ChangeTargertPoint();
                 }
-
+            }
+            else if (isSiting || isChilling)
+            {
+                float dist = Vector3.Distance(new Vector3(transform.position.x, 0, transform.position.z), new Vector3(relaxPoint.position.x, 0, relaxPoint.position.z));
+                if (dist <= 2)
+                {
+                    ApplyResting();
+                }
             }
         }
     }
-
 
     Transform GetClosestPlayer()
     {
@@ -109,14 +113,12 @@ public class HumanController : MonoBehaviour
         return closestPlayer.transform;
     }
 
-
     void FaceTarget(Transform target)
     {
         Vector3 direction = (target.position - transform.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5);
     }
-
 
     private void Attack(/*Transform target*/)
     {
@@ -132,7 +134,6 @@ public class HumanController : MonoBehaviour
         isAttacking = false;
         CancelInvoke();
         //agent.SetDestination(transform.position);
-
         if (!_isStopped)
             animator.StopPlayback();
         else
@@ -202,25 +203,21 @@ public class HumanController : MonoBehaviour
     void ApplyHobby()
     {
         isApplyingHobby = true;
-        Debug.Log("Apply Hobby");
         if (isWalking || isRunning)
         {
             ApplyMoving();
         }
         else if (isChilling || isSiting)
         {
-
+            GoToSpot();
         }
     }
     void ApplyMoving()
     {
         float distanceA = Vector3.Distance(transform.position, movePointA.position);
         float distanceB = Vector3.Distance(transform.position, movePointB.position);
-
         targetPoint = distanceA < distanceB ? movePointA.position : movePointB.position;
         agent.SetDestination(targetPoint);
-        Debug.Log("Dest set : " + distanceA + " " + distanceB + " " );
-        Debug.Log(targetPoint + " " + transform.position);
         if (isWalking)
             SetState("walk");
         else if (isRunning)
@@ -233,8 +230,17 @@ public class HumanController : MonoBehaviour
         agent.SetDestination(targetPoint);
     }
 
+    void GoToSpot()
+    {
+        agent.SetDestination(relaxPoint.position);
+        SetState("walk");
+    }
+
     void ApplyResting()
     {
-
+        if (isSiting)
+            SetState("sit");
+        else
+            SetState("idle");
     }
 }
