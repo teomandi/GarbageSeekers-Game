@@ -2,7 +2,7 @@
 
 A game project that implemented for the needs of the Interactive Systems course in 2020-2021
 
-## Game 
+## Game Goal
 
 An environmental game that aims to reduce awareness about the trash pollution and to show that **one man's trash is another man's treasure**.
 
