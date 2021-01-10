@@ -14,7 +14,13 @@ However, the residents of the island, seeing aliens wondering around, they get s
 
 When the collection is complete, the spaceship repairing starts. However, new problems will come up.
 
-# Packages
+---
+
+# Technical
+
+The game is implemented with the Unity Engine, and more specifically with 2019 version. Also, for the multiplayer part the Photo engine is used. 
+
+## Packages
 
 Packages that should be imported in order to build the Game
 
