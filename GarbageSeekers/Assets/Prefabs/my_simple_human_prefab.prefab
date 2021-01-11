@@ -259,7 +259,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isFreezable: 1
-  freezedDuration: 2
+  freezedDuration: 4
   skinMaterial: {fileID: 2100000, guid: 876cdc4b3d56a2844975177a3a879816, type: 2}
   icedMaterial: {fileID: 2100000, guid: a85975a606df8ed469796049c08762d1, type: 2}
   bodySkinRenderer: {fileID: 3925484874137499190}
@@ -315,15 +315,7 @@ MonoBehaviour:
   lookRadius: 10
   walkingSpeed: 3.5
   runningSpeed: 5
-  currentState: 
-  attackRange: 0
-  isWalking: 0
-  isSiting: 0
-  isRunning: 0
-  isChilling: 0
-  movePointA: {fileID: 0}
-  movePointB: {fileID: 0}
-  relaxPoint: {fileID: 0}
+  attackRange: 2
 --- !u!1 &740319612694424575
 GameObject:
   m_ObjectHideFlags: 0
@@ -1678,7 +1670,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5511669319467838720
 Transform:
   m_ObjectHideFlags: 0
@@ -2889,7 +2881,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1961389725839069586
 Transform:
   m_ObjectHideFlags: 0
@@ -6351,6 +6343,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7150749425517259797}
   - component: {fileID: 3925484874137499190}
+  - component: {fileID: 614913724108328183}
   m_Layer: 0
   m_Name: human_mesh
   m_TagString: Untagged
@@ -6453,6 +6446,18 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.0020159008, y: -0.00046056928, z: -0.0006229377}
     m_Extent: {x: 0.0026662038, y: 0.0072689904, z: 0.0043568276}
   m_DirtyAABB: 0
+--- !u!114 &614913724108328183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8275648840146275745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 676993bcd2229aa45a00715132218391, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8550350918004765993
 GameObject:
   m_ObjectHideFlags: 0

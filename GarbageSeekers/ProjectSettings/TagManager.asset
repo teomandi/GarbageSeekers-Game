@@ -12,6 +12,7 @@ TagManager:
   - stealingpoint
   - sittingpoint
   - human
+  - movepoint
   layers:
   - Default
   - TransparentFX

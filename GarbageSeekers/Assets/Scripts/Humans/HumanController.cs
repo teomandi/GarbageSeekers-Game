@@ -2,23 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using System;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(Animator))]
 public class HumanController : MonoBehaviour
 {
     [SerializeField] float lookRadius = 10f, walkingSpeed=3.5f, runningSpeed = 5f;
-    [SerializeField] string currentState;
     [SerializeField] int attackRange;
 
+    string currentState;
     Animator animator;
     NavMeshAgent agent;
     Transform currentTarget;
     bool isAttacking, isApplyingHobby;
 
     // Hobby
-    [SerializeField] bool isWalking, isSiting, isRunning, isChilling;
-    [SerializeField] Transform movePointA, movePointB, relaxPoint;
+    int hobbyID;
+    bool isWalking = false, isSiting = false, isRunning = false, isChilling = false;
+    Transform movePointA, movePointB, relaxPoint;
     Vector3 targetPoint;
 
 
@@ -34,7 +36,9 @@ public class HumanController : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         isAttacking = false;
 
-        SetState(currentState);
+        hobbyID = GameManager.GetHobbyID();
+        SetState("idle");
+        AssignHobby();
         ValidateHobby();
     }
 
@@ -140,7 +144,6 @@ public class HumanController : MonoBehaviour
             animator.StartPlayback();
     }
 
-
     public void SetState(string _state)
     {
         switch (_state)
@@ -175,6 +178,62 @@ public class HumanController : MonoBehaviour
 
             default:
                 break;
+        }
+    }
+
+    void AssignHobby()
+    {
+        if (hobbyID % 2 == 0)
+        {
+            //walk or run
+            GameObject[] points = GameObject.FindGameObjectsWithTag("movepoint");
+            float[] distances = new float[points.Length];
+            for (int i = 0; i < points.Length; i++)
+            {
+                distances[i] = Vector3.Distance(transform.position, points[i].transform.position);
+            }
+            Array.Sort(distances, points);
+            movePointA = points[0].transform;
+            movePointB = points[(int)(points.Length / 2)].transform;
+            if (hobbyID < 5)
+            {
+                //walk
+                isWalking = true;
+            }
+            else
+            {
+                //run
+                isRunning = true;
+            }
+        }
+        else
+        {
+            //sit or chill
+            GameObject[] points;
+            if (hobbyID < 5)
+            {
+                //sit
+                isSiting = true;
+                points = GameObject.FindGameObjectsWithTag("sittingpoint");
+
+            }
+            else
+            {
+                isChilling = true;
+                points = GameObject.FindGameObjectsWithTag("movepoint");
+            }
+            float minDistance = 1000;
+            relaxPoint = points[0].transform;
+            for (int i = 0; i < points.Length; i++)
+            {
+                float dist = Vector3.Distance(transform.position, points[i].transform.position);
+                if (minDistance > dist)
+                {
+                    relaxPoint = points[i].transform;
+                    minDistance = dist;
+                }
+            }
+
         }
     }
 
