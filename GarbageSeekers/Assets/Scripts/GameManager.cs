@@ -12,4 +12,6 @@ public class GameManager : MonoBehaviour
         currentHobbyId++;
         return currentHobbyId;
     }
+
+
 }

@@ -8169,6 +8169,12 @@ PrefabInstance:
       propertyPath: jumpForce
       value: 1000
       objectReference: {fileID: 0}
+    - target: {fileID: 2221893561385576302, guid: 41edbb8d2db25c946aa90d3d9ba30546,
+        type: 3}
+      propertyPath: garbageCounterPrefab
+      value: 
+      objectReference: {fileID: 5574298143572657551, guid: 1059844f39b3a204ebd812471bc449c7,
+        type: 3}
     - target: {fileID: 3490393122049318010, guid: 41edbb8d2db25c946aa90d3d9ba30546,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -61989,7 +61995,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0

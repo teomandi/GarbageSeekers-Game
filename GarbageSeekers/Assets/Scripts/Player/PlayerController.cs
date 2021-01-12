@@ -5,6 +5,7 @@ using Photon.Pun;
 using HashTable = ExitGames.Client.Photon.Hashtable;
 using Photon.Realtime;
 
+
 public class PlayerController : MonoBehaviourPunCallbacks
 {
     [SerializeField] GameObject cameraHolder;
@@ -25,8 +26,11 @@ public class PlayerController : MonoBehaviourPunCallbacks
     PhotonView PV;
 
     HealthBar healthBar;
+    GarbageCounter garbageCounter;
     [SerializeField] GameObject healthBarPrefab;
     [SerializeField] GameObject crossHairPrefab;
+    [SerializeField] GameObject garbageCounterPrefab;
+
 
     private void Awake()
     {
@@ -222,11 +226,18 @@ public class PlayerController : MonoBehaviourPunCallbacks
         Vector3 healtBarOffset = new Vector3(-55, -30, 0);
         GameObject healthBarObject = Instantiate(healthBarPrefab, healtBarOffset, Quaternion.identity) as GameObject;
         healthBarObject.transform.SetParent(GameObject.FindGameObjectWithTag("Canvas").transform, false);
-        this.InitHealthBar(healthBarObject.GetComponent<HealthBar>());
+        InitHealthBar(healthBarObject.GetComponent<HealthBar>());
 
         //show crosshair
         GameObject crossHaiObject = Instantiate(crossHairPrefab, Vector3.zero, Quaternion.identity) as GameObject;
         crossHaiObject.transform.SetParent(GameObject.FindGameObjectWithTag("Canvas").transform, false);
+
+
+        //show garbage counter
+        Vector3 garbageCounterOffset = new Vector3(0, 0, 0);
+        GameObject garbageCounterObject = Instantiate(garbageCounterPrefab, garbageCounterOffset, Quaternion.identity) as GameObject;
+        garbageCounterObject.transform.SetParent(GameObject.FindGameObjectWithTag("Canvas").transform, false);
+        garbageCounter = garbageCounterObject.GetComponent<GarbageCounter>();
     }
 
 
@@ -236,5 +247,4 @@ public class PlayerController : MonoBehaviourPunCallbacks
         healthBar.SetMaxHealth(maxHealth);
         currentHealth = maxHealth;
     }
-
 }
