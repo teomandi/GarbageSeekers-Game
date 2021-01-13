@@ -8,45 +8,43 @@ public class ItemMine : MonoBehaviour
     //HP of the resource
     public int resourceHP=10;
     //value of garbages
-    public int value = 5;
+    public int value=5;
 
     
     //delay of the mini items
-    public string MineObjDelay = "n";
+    public bool MineObjDelay = true;
+
     //miny objects produced during mining
     public Transform MineObj;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
+
+
     void OnParticleCollision(GameObject other)
     {
-        Debug.Log("mining");
+        Debug.Log("Collision with particles!!!!");
         resourceHP -= 1;
-        if (MineObjDelay == "n")
+        if (MineObjDelay)
         {
-            Instantiate(MineObj, transform.position, MineObj.rotation);
-            MineObjDelay = "y";
+            GameObject miniMe = Instantiate(MineObj.gameObject, transform.position, MineObj.rotation) as GameObject;
+            miniMe.transform.localScale = miniMe.transform.localScale / 2;
+            MineObjDelay = false;
             StartCoroutine(resetDelay());
         }
-        
     }
 
     IEnumerator resetDelay()
     {
-        yield return new WaitForSeconds(.35f);
-        MineObjDelay = "n";
+        yield return new WaitForSeconds(.15f);
+        MineObjDelay = true;
     }
+
 
     void Update()
     {
         if (resourceHP < 1)
         {
             Destroy(gameObject);
-            GarbageScore.theScore += value; 
+            GarbageCounter.currentGarbage += value; 
         }
     }
 }

@@ -4,22 +4,42 @@ using UnityEngine;
 
 public class miniMineObj : MonoBehaviour
 {
-    // Start is called before the first frame update
-    private GameObject wayPoint;
     private Vector3 wayPointPos;
+    private GameObject wayPoint;
+
     //This will be the mine item speed. Adjust as necessary.
-    private float speed = 10.0f;
-    void Start()
+    [SerializeField]private float speed = 10.0f;
+
+    GameObject GetClosestPlayer()
     {
-        wayPoint = GameObject.Find("ItemHolder");///exei 8ema auto
-        //GetComponent<Rigidbody>().velocity = new Vector3(gun.transform.position.x, gun.transform.position.y, gun.transform.position.z);
+        GameObject[] players = GameObject.FindGameObjectsWithTag("player"); //maybe in start (?) maybe each player registers himself (?) maybe use a list (?)
+        if (players.Length == 0)
+            return null;
+        GameObject closestPlayer = players[0];
+        float minDistance = float.MaxValue, distance;
+        foreach (GameObject player in players)
+        {
+            distance = Vector3.Distance(transform.position, player.transform.position);
+            if (distance < minDistance)
+            {
+                closestPlayer = player;
+                minDistance = distance;
+            }
+        }
+        return closestPlayer;
     }
 
-    // Update is called once per frame
+    void Start()
+    {
+        wayPoint = GetClosestPlayer();
+    }
+
+
     void Update()
     {
         wayPointPos = new Vector3(wayPoint.transform.position.x, transform.position.y, wayPoint.transform.position.z);
-        //Here, the item will follow the waypoint.
+        
+        // the item will follow the waypoint.
         transform.position = Vector3.MoveTowards(transform.position, wayPointPos, speed * Time.deltaTime);
         if (Vector3.Distance(this.transform.position, wayPointPos) < 2)
         {

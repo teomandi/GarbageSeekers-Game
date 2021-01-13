@@ -216,7 +216,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     public void Die()
     {
-        Debug.Log("You are dead!!!!");
+/*        Debug.Log("You are dead!!!!");*/
     }
 
     //sets up the players UI

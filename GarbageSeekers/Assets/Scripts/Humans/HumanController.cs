@@ -129,7 +129,6 @@ public class HumanController : MonoBehaviour
         SetState("attack");
         if (currentTarget!=null)
             currentTarget.GetComponent<PlayerController>().TakeDamage(10);
-        Debug.Log("Attack!!!");
     }
 
     public void applyStop(bool _isStopped)
