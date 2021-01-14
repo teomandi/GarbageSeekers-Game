@@ -7,14 +7,16 @@ using System.IO;
 public class PlayerManager : MonoBehaviour
 {
     PhotonView PV;
-    int spawnerIndex;
+    int index;
     GameObject[] playerSpawners;
+    GameObject[] players;
 
     private void Awake()
     {
         PV = GetComponent<PhotonView>();
-        spawnerIndex = 0;
+        index = 0;
         playerSpawners = GameObject.FindGameObjectsWithTag("spawner");
+
 
     }
 
@@ -25,15 +27,16 @@ public class PlayerManager : MonoBehaviour
             CreateController();
             Debug.Log("Player " + PhotonNetwork.NickName + " was setup");
         }
-        spawnerIndex++;
-        if (spawnerIndex <= playerSpawners.Length)
-            spawnerIndex = 0;
+        index++;
+        if (index <= playerSpawners.Length)
+            index = 0;  // do the cycle
     }
-    void CreateController()
+    void CreateController() //create a player
     {
-        float x = playerSpawners[spawnerIndex].transform.position.x;
-        float z = playerSpawners[spawnerIndex].transform.position.z;
+        float x = playerSpawners[index].transform.position.x;
+        float z = playerSpawners[index].transform.position.z;
         Debug.Log("Instantiated PlayerController");
-        PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerController"), new Vector3(x, 0, z), Quaternion.identity);//create a player
+        PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerController"), new Vector3(x, 0, z), Quaternion.identity);
+        
     }
 }

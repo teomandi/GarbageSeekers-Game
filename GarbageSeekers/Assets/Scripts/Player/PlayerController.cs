@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     [SerializeField] float mouseSensitivity, sprintSpeed, walkSpeed, jumpForce, smoothTime;
     [SerializeField] Item[] items;
     [SerializeField] int maxHealth = 100;
-    [SerializeField] int currentHealth;
+    [SerializeField] int currentHealth, minimumY;
 
     int itemIndex;
     int previousItemIndex = -1;
@@ -36,6 +36,11 @@ public class PlayerController : MonoBehaviourPunCallbacks
     {
         rb = GetComponent<Rigidbody>();
         PV = GetComponent<PhotonView>();
+
+        // register myself
+        /*        if (!PV.IsMine) //<-------------------------
+            return;*/
+        GameManager.RegisterPlayer(gameObject, gameObject.transform.position);
     }
     private void Start()
     {
@@ -66,10 +71,10 @@ public class PlayerController : MonoBehaviourPunCallbacks
         Move();
         Jump();
         Fire();
+        if(transform.position.y < minimumY)
+            GameManager.RestorePlayer(gameObject);
         if (Input.GetKeyUp(KeyCode.LeftShift))
-        {
-            TakeDamage(-10);
-        }
+            TakeDamage(-10); //this is gain ;p
 
         //items handle from numbers
         for (int i = 0; i < items.Length; i++)
@@ -216,7 +221,16 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     public void Die()
     {
-/*        Debug.Log("You are dead!!!!");*/
+        /*        Debug.Log("You are dead!!!!");*/
+        // lose trash
+        GarbageCounter.currentGarbage -= 30;
+        // restore position
+        GameManager.RestorePlayer(gameObject);
+        // restore health
+        currentHealth = maxHealth;
+        if (healthBar != null) //when hiting other players
+            healthBar.SetHealth(maxHealth);
+
     }
 
     //sets up the players UI
