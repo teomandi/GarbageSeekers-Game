@@ -4,6 +4,8 @@ using UnityEngine;
 using Photon.Pun;
 using HashTable = ExitGames.Client.Photon.Hashtable;
 using Photon.Realtime;
+using TMPro;
+
 
 
 public class PlayerController : MonoBehaviourPunCallbacks
@@ -27,9 +29,12 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     HealthBar healthBar;
     GarbageCounter garbageCounter;
+    TMP_Text messageUI;
+
     [SerializeField] GameObject healthBarPrefab;
     [SerializeField] GameObject crossHairPrefab;
     [SerializeField] GameObject garbageCounterPrefab;
+    [SerializeField] GameObject playerMessagePrefab;
 
 
     private void Awake()
@@ -40,7 +45,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         // register myself
         /*        if (!PV.IsMine) //<-------------------------
             return;*/
-        GameManager.RegisterPlayer(gameObject, gameObject.transform.position);
+        /*GameManager.RegisterPlayer(gameObject, gameObject.transform.position);*/
     }
     private void Start()
     {
@@ -221,7 +226,23 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     public void Die()
     {
-        /*        Debug.Log("You are dead!!!!");*/
+        Debug.Log("You are dead!!!!");
+        SetMessage("YOU DIED;", Color.red, 50);
+        transform.position = new Vector3(transform.position.x, transform.position.y+200, transform.position.z);
+        Invoke("ApplyDeath", 2f);
+    }
+
+    public void SetMessage(string _text, Color _color, int _size=40)
+    {
+        if (messageUI != null)
+        {
+            messageUI.text = _text;
+            messageUI.fontSize = _size;
+            messageUI.color = _color;
+        }
+    }
+    void ApplyDeath()
+    {
         // lose trash
         GarbageCounter.currentGarbage -= 30;
         // restore position
@@ -230,7 +251,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         currentHealth = maxHealth;
         if (healthBar != null) //when hiting other players
             healthBar.SetHealth(maxHealth);
-
+        SetMessage("", Color.white);
     }
 
     //sets up the players UI
@@ -248,10 +269,15 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
 
         //show garbage counter
-        Vector3 garbageCounterOffset = new Vector3(0, 0, 0);
-        GameObject garbageCounterObject = Instantiate(garbageCounterPrefab, garbageCounterOffset, Quaternion.identity) as GameObject;
+        GameObject garbageCounterObject = Instantiate(garbageCounterPrefab, Vector3.zero, Quaternion.identity) as GameObject;
         garbageCounterObject.transform.SetParent(GameObject.FindGameObjectWithTag("Canvas").transform, false);
         garbageCounter = garbageCounterObject.GetComponent<GarbageCounter>();
+
+        //show player message
+        GameObject playerMessager = Instantiate(playerMessagePrefab, new Vector3(0, 5, 0), Quaternion.identity) as GameObject;
+        playerMessager.transform.SetParent(GameObject.FindGameObjectWithTag("Canvas").transform, false);
+        messageUI = playerMessager.GetComponent<TMP_Text>();
+        Debug.Log(messageUI.text);
     }
 
 

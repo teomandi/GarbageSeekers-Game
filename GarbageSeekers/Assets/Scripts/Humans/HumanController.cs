@@ -77,6 +77,8 @@ public class HumanController : MonoBehaviour
         else
         {
             isAttacking = false;
+            CancelInvoke();
+
             if (!isApplyingHobby)
                 ApplyHobby();
             else if(isRunning || isWalking)
