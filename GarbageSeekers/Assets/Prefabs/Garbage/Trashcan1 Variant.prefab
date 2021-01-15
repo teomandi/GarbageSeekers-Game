@@ -25,8 +25,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82cfcdf0308e65c4fbe9dbf372d9038d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resourceHP: 10
-  value: 5
+  resourceHP: 50
+  value: 7
   MineObjDelay: 1
   MineObj: {fileID: 3655613488807663064, guid: c3b1973031a98fe40a9fba20b12a6baf, type: 3}
 --- !u!1001 &8417061176655864469
@@ -38,7 +38,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 100000, guid: de32a7368f7dfb543b7be3010d09e8ca, type: 3}
       propertyPath: m_Name
-      value: Trashcan1 Variant (3)
+      value: Trashcan1 Variant
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: de32a7368f7dfb543b7be3010d09e8ca, type: 3}
       propertyPath: m_LocalPosition.x

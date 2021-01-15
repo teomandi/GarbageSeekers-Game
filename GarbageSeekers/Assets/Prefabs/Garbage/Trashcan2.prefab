@@ -116,7 +116,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   resourceHP: 25
-  value: 3
+  value: 7
   MineObjDelay: 1
   MineObj: {fileID: 3655613488807663064, guid: c3b1973031a98fe40a9fba20b12a6baf, type: 3}
 --- !u!65 &9046303255099332503

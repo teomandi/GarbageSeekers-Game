@@ -113,7 +113,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82cfcdf0308e65c4fbe9dbf372d9038d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resourceHP: 10
+  resourceHP: 30
   value: 4
   MineObjDelay: 1
   MineObj: {fileID: 3655613488807663064, guid: c3b1973031a98fe40a9fba20b12a6baf, type: 3}
