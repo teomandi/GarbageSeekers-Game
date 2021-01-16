@@ -458,6 +458,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ef1864c1f2f4984187649d410b92a14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  freezedDuration: 0
+  freezedDuration: 2
   icedMaterial: {fileID: 2100000, guid: a85975a606df8ed469796049c08762d1, type: 2}
   myMaterial: {fileID: 2100000, guid: aa87e04130195564ba9a4d334968abc1, type: 2}
