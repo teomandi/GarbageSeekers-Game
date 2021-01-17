@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -3428,7 +3428,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 450, y: -687}
+  m_AnchoredPosition: {x: 450, y: -665}
   m_SizeDelta: {x: 700, y: 43.35855}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &687704273
@@ -3792,7 +3792,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 452, y: -912}
+  m_AnchoredPosition: {x: 452, y: -890.00006}
   m_SizeDelta: {x: 700, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &865939580
@@ -4285,7 +4285,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 450, y: -816}
+  m_AnchoredPosition: {x: 450, y: -794}
   m_SizeDelta: {x: 700, y: 20.412981}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1007156195
@@ -4931,7 +4931,7 @@ RectTransform:
   m_GameObject: {fileID: 1147575493}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.2619, y: 1.367715, z: 1}
+  m_LocalScale: {x: 1.2619, y: 1.1954787, z: 1}
   m_Children:
   - {fileID: 189742966}
   m_Father: {fileID: 1790211391}
@@ -5238,7 +5238,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 450, y: -623}
+  m_AnchoredPosition: {x: 450, y: -601}
   m_SizeDelta: {x: 700, y: 20.412981}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1203351870
@@ -6569,7 +6569,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 450, y: -31}
+  m_AnchoredPosition: {x: 450, y: 82}
   m_SizeDelta: {x: 700, y: 20.412981}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1386624130
@@ -7722,7 +7722,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 450, y: -191}
+  m_AnchoredPosition: {x: 450, y: -78.00003}
   m_SizeDelta: {x: 700, y: 218.44223}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1780718331
@@ -7750,18 +7750,18 @@ MonoBehaviour:
     energy that they need. Luckily, this valuable resource exits in the garbage of
     humans, AND IT IS EVERYWHERE. So, the collection starts.
 
-    
 
-    However,
-    the residents of the island, seeing aliens wondering around, they get scared
-    and aggressive, so they hunt, and attack the aliens. The aliens in order to survive
+
+    However, the
+    residents of the island, seeing aliens wondering around, they get scared and
+    aggressive, so they hunt, and attack the aliens. The aliens in order to survive
     in this hostile environment, the have to freeze the humans, and continue their
     tasks.
 
-    
 
-    When the collection is complete, the spaceship repairing
-    starts. However, new problems will come up.'
+
+    When the collection is complete, the spaceship repairing starts.
+    However, new problems will come up.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e1cf4f8a722430643af21d1ddbfc6d96, type: 2}
   m_sharedMaterial: {fileID: -4193947899901745315, guid: e1cf4f8a722430643af21d1ddbfc6d96,

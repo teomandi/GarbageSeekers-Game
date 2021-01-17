@@ -28,7 +28,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     }
     void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
-        if (scene.buildIndex == 1) //we are in the level1 scene
+        if (scene.buildIndex == 1 || scene.buildIndex == 2) //we are in the level1 scene
         {
             PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerManager"), Vector3.zero, Quaternion.identity);
         }

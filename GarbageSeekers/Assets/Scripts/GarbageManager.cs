@@ -31,11 +31,7 @@ public class GarbageManager : MonoBehaviour
     [PunRPC]
     public void RPCSetGarbage(int _garbage)
     {
-        Debug.Log("1--> Currnet Garbage: " + currentGarbage);
-        Debug.Log("adding Garbage: " + _garbage);
         currentGarbage += _garbage;
-        Debug.Log("2--> Currnet Garbage: " + currentGarbage);
-
     }
 
     void Update()
@@ -52,6 +48,13 @@ public class GarbageManager : MonoBehaviour
         {
             complete = true;
             GameManager.LevelComplete();
+            if (PhotonNetwork.IsMasterClient)
+                Invoke("LoadNewLevel", 3f);
         }
+    }
+
+    private void LoadNewLevel()
+    {
+        PhotonNetwork.LoadLevel(2);
     }
 }

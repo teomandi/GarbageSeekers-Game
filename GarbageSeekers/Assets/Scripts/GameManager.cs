@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class GameManager : MonoBehaviour
 {
@@ -33,9 +34,13 @@ public class GameManager : MonoBehaviour
             if(players != null)
                 players[i].GetComponent<PlayerController>().SetMessage("Level Completed!!!", Color.green, 55);
         }
-        Time.timeScale = 0f;
+        /*Time.timeScale = 0f;*/
 
-        // load new level
+    }
+
+    public static void LaodLevel2()
+    {
+        PhotonNetwork.LoadLevel(1);
     }
 
 

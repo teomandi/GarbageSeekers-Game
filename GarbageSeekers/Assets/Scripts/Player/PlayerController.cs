@@ -271,7 +271,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
         /*        GameObject garbageManagerObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "GarbageManager"), Vector3.zero, Quaternion.identity) as GameObject;
                 garbageManagerObject.transform.SetParent(GameObject.FindGameObjectWithTag("Canvas").transform, false);
         garbageManager = garbageManagerObject.GetComponent<GarbageManager>();*/
-        garbageManager = GameObject.FindGameObjectWithTag("garbage manager").GetComponent<GarbageManager>();
+        if(SceneManagerHelper.ActiveSceneBuildIndex == 1)
+            garbageManager = GameObject.FindGameObjectWithTag("garbage manager").GetComponent<GarbageManager>();
 
         //show player message
         GameObject playerMessager = Instantiate(playerMessagePrefab, new Vector3(0, 5, 0), Quaternion.identity) as GameObject;
