@@ -316,6 +316,7 @@ MonoBehaviour:
   walkingSpeed: 3.5
   runningSpeed: 5
   attackRange: 2
+  damage: 7
 --- !u!1 &740319612694424575
 GameObject:
   m_ObjectHideFlags: 0
@@ -7000,7 +7001,7 @@ PrefabInstance:
     - target: {fileID: 3778224469220005562, guid: d3fe3d703b38ffe42992cbbce4012a55,
         type: 3}
       propertyPath: period
-      value: 10
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3778224469220005562, guid: d3fe3d703b38ffe42992cbbce4012a55,
         type: 3}

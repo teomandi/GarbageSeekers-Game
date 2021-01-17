@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
-using HashTable = ExitGames.Client.Photon.Hashtable;
 using Photon.Realtime;
+using HashTable = ExitGames.Client.Photon.Hashtable;
 using TMPro;
-
+using System.IO;
 
 
 public class PlayerController : MonoBehaviourPunCallbacks
@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     [SerializeField] GameObject cameraHolder;
     [SerializeField] float mouseSensitivity, sprintSpeed, walkSpeed, jumpForce, smoothTime;
     [SerializeField] Item[] items;
-    [SerializeField] int maxHealth = 100;
+    [SerializeField] int maxHealth, deathPenalty;
     [SerializeField] int currentHealth, minimumY;
 
     int itemIndex;
@@ -28,12 +28,12 @@ public class PlayerController : MonoBehaviourPunCallbacks
     PhotonView PV;
 
     HealthBar healthBar;
-    GarbageCounter garbageCounter;
+    GarbageManager garbageManager;
     TMP_Text messageUI;
 
     [SerializeField] GameObject healthBarPrefab;
     [SerializeField] GameObject crossHairPrefab;
-    [SerializeField] GameObject garbageCounterPrefab;
+    [SerializeField] GameObject garbageManagerPrefab;
     [SerializeField] GameObject playerMessagePrefab;
 
 
@@ -41,37 +41,32 @@ public class PlayerController : MonoBehaviourPunCallbacks
     {
         rb = GetComponent<Rigidbody>();
         PV = GetComponent<PhotonView>();
-
-        // register myself
-        /*        if (!PV.IsMine) //<-------------------------
-            return;*/
-        /*GameManager.RegisterPlayer(gameObject, gameObject.transform.position);*/
     }
     private void Start()
     {
-        SetupPlayerUI(); //<-------------------------only for test
-        EquipItem(0);
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        /*        SetupPlayerUI(); //<-------------------------only for test
+                EquipItem(0);
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;*/
 
         if (PV.IsMine)
         {
             Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+            /*Cursor.visible = false;*/
             SetupPlayerUI();
             EquipItem(0);
         }
-/*        else //<-------------------------
+        else //<-------------------------
         {
             Destroy(GetComponentInChildren<Camera>().gameObject);
             Destroy(rb);
-        }*/
+        }
     }
 
     private void Update()
     {
-/*        if (!PV.IsMine) //<-------------------------
-            return;*/
+        if (!PV.IsMine) //<-------------------------
+            return;
         Look();
         Move();
         Jump();
@@ -79,7 +74,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         if(transform.position.y < minimumY)
             GameManager.RestorePlayer(gameObject);
         if (Input.GetKeyUp(KeyCode.LeftShift))
-            TakeDamage(-10); //this is gain ;p
+            TakeDamage(-5); //this is gain ;p
 
         //items handle from numbers
         for (int i = 0; i < items.Length; i++)
@@ -137,7 +132,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
             if (PV.IsMine)
             {
                 HashTable hash = new HashTable();
-                hash.Add("freezing_beam", true);
+                hash.Add("firing", true);
                 PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
             }
         }
@@ -147,7 +142,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
             if (PV.IsMine)
             {
                 HashTable hash = new HashTable();
-                hash.Add("freezing_beam", false);
+                hash.Add("firing", false);
                 PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
             }
         }
@@ -160,8 +155,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     private void FixedUpdate()
     {
-/*        if (!PV.IsMine)  //<-------------------------
-            return;*/
+        if (!PV.IsMine)  //<-------------------------
+            return;
         rb.MovePosition(rb.position + transform.TransformDirection(moveAmount) * Time.fixedDeltaTime);
     }
 
@@ -188,12 +183,15 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     public void TakeDamage(int _damage)
     {
-        currentHealth -= _damage;
-        if(healthBar != null) //when hiting other players
-            healthBar.SetHealth(currentHealth);
-        if(currentHealth <= 0)
+        if (PV.IsMine)
         {
-            Die();
+            currentHealth -= _damage;
+            if (healthBar != null) //when hiting other players
+                healthBar.SetHealth(currentHealth);
+            if (currentHealth <= 0)
+            {
+                Die();
+            }
         }
     }
 
@@ -207,12 +205,12 @@ public class PlayerController : MonoBehaviourPunCallbacks
             if(changedProps.ContainsKey("itemIndex"))
                 EquipItem((int)changedProps["itemIndex"]);
 
-            if (changedProps.ContainsKey("freezing_beam"))
+            if (changedProps.ContainsKey("firing"))
             {
 
                 ItemController itemController = items[itemIndex].GetComponent<Item>().itemGameObject.GetComponent<ItemController>();
                 if (itemController != null)
-                    if ((bool)changedProps["freezing_beam"])
+                    if ((bool)changedProps["firing"])
                     {
                         itemController.StartInteraction();
                     }
@@ -228,7 +226,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     {
         Debug.Log("You are dead!!!!");
         SetMessage("YOU DIED;", Color.red, 50);
-        transform.position = new Vector3(transform.position.x, transform.position.y+200, transform.position.z);
+        transform.position = new Vector3(transform.position.x, transform.position.y + 200, transform.position.z);
         Invoke("ApplyDeath", 2f);
     }
 
@@ -244,7 +242,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     void ApplyDeath()
     {
         // lose trash
-        GarbageCounter.currentGarbage -= 30;
+        garbageManager.IncreaseGarbage(deathPenalty);
         // restore position
         GameManager.RestorePlayer(gameObject);
         // restore health
@@ -268,10 +266,12 @@ public class PlayerController : MonoBehaviourPunCallbacks
         crossHaiObject.transform.SetParent(GameObject.FindGameObjectWithTag("Canvas").transform, false);
 
 
-        //show garbage counter
-        GameObject garbageCounterObject = Instantiate(garbageCounterPrefab, Vector3.zero, Quaternion.identity) as GameObject;
-        garbageCounterObject.transform.SetParent(GameObject.FindGameObjectWithTag("Canvas").transform, false);
-        garbageCounter = garbageCounterObject.GetComponent<GarbageCounter>();
+        //show garbage manager
+        //GameObject garbageManagerObject = Instantiate(garbageManagerPrefab, Vector3.zero, Quaternion.identity) as GameObject;
+        /*        GameObject garbageManagerObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "GarbageManager"), Vector3.zero, Quaternion.identity) as GameObject;
+                garbageManagerObject.transform.SetParent(GameObject.FindGameObjectWithTag("Canvas").transform, false);
+        garbageManager = garbageManagerObject.GetComponent<GarbageManager>();*/
+        garbageManager = GameObject.FindGameObjectWithTag("garbage manager").GetComponent<GarbageManager>();
 
         //show player message
         GameObject playerMessager = Instantiate(playerMessagePrefab, new Vector3(0, 5, 0), Quaternion.identity) as GameObject;
@@ -279,7 +279,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
         messageUI = playerMessager.GetComponent<TMP_Text>();
         Debug.Log(messageUI.text);
     }
-
 
     void InitHealthBar(HealthBar _healthbar)
     {

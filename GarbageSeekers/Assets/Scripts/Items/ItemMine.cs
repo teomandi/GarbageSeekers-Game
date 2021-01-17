@@ -9,14 +9,10 @@ public class ItemMine : MonoBehaviour
     public int resourceHP=10;
     //value of garbages
     public int value=5;
-
-    
     //delay of the mini items
     public bool MineObjDelay = true;
-
     //miny objects produced during mining
     public Transform MineObj;
-
 
 
     void OnParticleCollision(GameObject other)
@@ -43,7 +39,9 @@ public class ItemMine : MonoBehaviour
         if (resourceHP < 1)
         {
             Destroy(gameObject);
-            GarbageCounter.currentGarbage += value; 
+            GarbageManager garbageManager = GameObject.FindGameObjectWithTag("garbage manager").GetComponent<GarbageManager>();
+            if(garbageManager !=null)
+                garbageManager.IncreaseGarbage(value); 
         }
     }
 }

@@ -34,9 +34,10 @@ public class PlayerManager : MonoBehaviour
     void CreateController() //create a player
     {
         float x = playerSpawners[index].transform.position.x;
+        float y = playerSpawners[index].transform.position.y + 3;
         float z = playerSpawners[index].transform.position.z;
         Debug.Log("Instantiated PlayerController");
-        PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerController"), new Vector3(x, 0, z), Quaternion.identity);
+        PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerController"), new Vector3(x, y, z), Quaternion.identity);
         
     }
 }

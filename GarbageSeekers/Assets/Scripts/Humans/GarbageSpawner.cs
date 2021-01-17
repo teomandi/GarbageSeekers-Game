@@ -36,7 +36,7 @@ public class GarbageSpawner : MonoBehaviour
         }
 
         garbage.transform.rotation = Random.rotation;
-        Debug.Log("Throwing garbage with force: " + throwForce);
+/*        Debug.Log("Throwing garbage with force: " + throwForce);*/
 
         rb.AddForce(throwForce * new Vector3(1, 1, Random.Range(-1f, 1f)));
     }

@@ -9,10 +9,10 @@ TagManager:
   - Canvas
   - player
   - spawner
-  - stealingpoint
   - sittingpoint
   - human
   - movepoint
+  - garbage manager
   layers:
   - Default
   - TransparentFX

@@ -9,7 +9,7 @@ using System;
 public class HumanController : MonoBehaviour
 {
     [SerializeField] float lookRadius = 10f, walkingSpeed=3.5f, runningSpeed = 5f;
-    [SerializeField] int attackRange;
+    [SerializeField] int attackRange, damage;
 
     string currentState;
     Animator animator;
@@ -130,7 +130,7 @@ public class HumanController : MonoBehaviour
     {
         SetState("attack");
         if (currentTarget!=null)
-            currentTarget.GetComponent<PlayerController>().TakeDamage(10);
+            currentTarget.GetComponent<PlayerController>().TakeDamage(damage);
     }
 
     public void applyStop(bool _isStopped)

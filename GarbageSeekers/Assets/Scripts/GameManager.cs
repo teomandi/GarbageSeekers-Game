@@ -13,25 +13,10 @@ public class GameManager : MonoBehaviour
         return currentHobbyId;
     }
 
-    private static int index = 0;
-    private static GameObject[] players;
-    private static GameObject[] spawners;
-
-/*    public static void RegisterPlayer(GameObject _player, Vector3 _spawner)
-    {
-        players[index] = _player;
-        spawners[index] = _spawner;
-        index++;
-    }*/
-
-    public void Awake()
-    {
-        players = GameObject.FindGameObjectsWithTag("player");
-        spawners = GameObject.FindGameObjectsWithTag("spawner");
-    }
-
     public static void RestorePlayer(GameObject _player)
     {
+        GameObject[] players = GameObject.FindGameObjectsWithTag("player");
+        GameObject[] spawners = GameObject.FindGameObjectsWithTag("spawner");
         for (int i = 0; i < players.Length; i++)
         {
             if(players[i] == _player)
@@ -41,12 +26,14 @@ public class GameManager : MonoBehaviour
 
     public static void LevelComplete()
     {
-        Debug.Log("~~~~~~>" + players.Length);
+        GameObject[] players = GameObject.FindGameObjectsWithTag("player");
+
         for (int i = 0; i < players.Length; i++)
         {
             if(players != null)
-                players[i].GetComponent<PlayerController>().SetMessage("Level Complete!!!", Color.green, 55);
+                players[i].GetComponent<PlayerController>().SetMessage("Level Completed!!!", Color.green, 55);
         }
+        Time.timeScale = 0f;
 
         // load new level
     }
