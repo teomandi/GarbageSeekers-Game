@@ -2,16 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
-using HashTable = ExitGames.Client.Photon.Hashtable;
 using Photon.Realtime;
+using HashTable = ExitGames.Client.Photon.Hashtable;
+using TMPro;
+using System.IO;
+
 
 public class PlayerController : MonoBehaviourPunCallbacks
 {
     [SerializeField] GameObject cameraHolder;
     [SerializeField] float mouseSensitivity, sprintSpeed, walkSpeed, jumpForce, smoothTime;
     [SerializeField] Item[] items;
-    [SerializeField] int maxHealth = 100;
-    [SerializeField] int currentHealth;
+    [SerializeField] int maxHealth, deathPenalty;
+    [SerializeField] int currentHealth, minimumY;
 
     int itemIndex;
     int previousItemIndex = -1;
@@ -25,8 +28,14 @@ public class PlayerController : MonoBehaviourPunCallbacks
     PhotonView PV;
 
     HealthBar healthBar;
+    GarbageManager garbageManager;
+    TMP_Text messageUI;
+
     [SerializeField] GameObject healthBarPrefab;
     [SerializeField] GameObject crossHairPrefab;
+    [SerializeField] GameObject garbageManagerPrefab;
+    [SerializeField] GameObject playerMessagePrefab;
+
 
     private void Awake()
     {
@@ -35,12 +44,15 @@ public class PlayerController : MonoBehaviourPunCallbacks
     }
     private void Start()
     {
-/*        SetupPlayerUI(); //<-------------------------del that
-        EquipItem(0);*/
+        /*        SetupPlayerUI(); //<-------------------------only for test
+                EquipItem(0);
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;*/
+
         if (PV.IsMine)
         {
-            /*Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;*/
+            Cursor.lockState = CursorLockMode.Locked;
+            /*Cursor.visible = false;*/
             SetupPlayerUI();
             EquipItem(0);
         }
@@ -59,11 +71,10 @@ public class PlayerController : MonoBehaviourPunCallbacks
         Move();
         Jump();
         Fire();
+        if(transform.position.y < minimumY)
+            GameManager.RestorePlayer(gameObject);
         if (Input.GetKeyUp(KeyCode.LeftShift))
-        {
-            Debug.Log("Take Damage");
-            TakeDamage(10);
-        }
+            TakeDamage(-5); //this is gain ;p
 
         //items handle from numbers
         for (int i = 0; i < items.Length; i++)
@@ -121,7 +132,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
             if (PV.IsMine)
             {
                 HashTable hash = new HashTable();
-                hash.Add("freezing_beam", true);
+                hash.Add("firing", true);
                 PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
             }
         }
@@ -131,7 +142,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
             if (PV.IsMine)
             {
                 HashTable hash = new HashTable();
-                hash.Add("freezing_beam", false);
+                hash.Add("firing", false);
                 PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
             }
         }
@@ -172,12 +183,15 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     public void TakeDamage(int _damage)
     {
-        currentHealth -= _damage;
-        if(healthBar != null) //when hiting other players
-            healthBar.SetHealth(currentHealth);
-        if(currentHealth <= 0)
+        if (PV.IsMine)
         {
-            Die();
+            currentHealth -= _damage;
+            if (healthBar != null) //when hiting other players
+                healthBar.SetHealth(currentHealth);
+            if (currentHealth <= 0)
+            {
+                Die();
+            }
         }
     }
 
@@ -191,12 +205,12 @@ public class PlayerController : MonoBehaviourPunCallbacks
             if(changedProps.ContainsKey("itemIndex"))
                 EquipItem((int)changedProps["itemIndex"]);
 
-            if (changedProps.ContainsKey("freezing_beam"))
+            if (changedProps.ContainsKey("firing"))
             {
 
                 ItemController itemController = items[itemIndex].GetComponent<Item>().itemGameObject.GetComponent<ItemController>();
                 if (itemController != null)
-                    if ((bool)changedProps["freezing_beam"])
+                    if ((bool)changedProps["firing"])
                     {
                         itemController.StartInteraction();
                     }
@@ -211,6 +225,31 @@ public class PlayerController : MonoBehaviourPunCallbacks
     public void Die()
     {
         Debug.Log("You are dead!!!!");
+        SetMessage("YOU DIED;", Color.red, 50);
+        transform.position = new Vector3(transform.position.x, transform.position.y + 200, transform.position.z);
+        Invoke("ApplyDeath", 2f);
+    }
+
+    public void SetMessage(string _text, Color _color, int _size=40)
+    {
+        if (messageUI != null)
+        {
+            messageUI.text = _text;
+            messageUI.fontSize = _size;
+            messageUI.color = _color;
+        }
+    }
+    void ApplyDeath()
+    {
+        // lose trash
+        garbageManager.IncreaseGarbage(deathPenalty);
+        // restore position
+        GameManager.RestorePlayer(gameObject);
+        // restore health
+        currentHealth = maxHealth;
+        if (healthBar != null) //when hiting other players
+            healthBar.SetHealth(maxHealth);
+        SetMessage("", Color.white);
     }
 
     //sets up the players UI
@@ -220,13 +259,27 @@ public class PlayerController : MonoBehaviourPunCallbacks
         Vector3 healtBarOffset = new Vector3(-55, -30, 0);
         GameObject healthBarObject = Instantiate(healthBarPrefab, healtBarOffset, Quaternion.identity) as GameObject;
         healthBarObject.transform.SetParent(GameObject.FindGameObjectWithTag("Canvas").transform, false);
-        this.InitHealthBar(healthBarObject.GetComponent<HealthBar>());
+        InitHealthBar(healthBarObject.GetComponent<HealthBar>());
 
         //show crosshair
         GameObject crossHaiObject = Instantiate(crossHairPrefab, Vector3.zero, Quaternion.identity) as GameObject;
         crossHaiObject.transform.SetParent(GameObject.FindGameObjectWithTag("Canvas").transform, false);
-    }
 
+
+        //show garbage manager
+        //GameObject garbageManagerObject = Instantiate(garbageManagerPrefab, Vector3.zero, Quaternion.identity) as GameObject;
+        /*        GameObject garbageManagerObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "GarbageManager"), Vector3.zero, Quaternion.identity) as GameObject;
+                garbageManagerObject.transform.SetParent(GameObject.FindGameObjectWithTag("Canvas").transform, false);
+        garbageManager = garbageManagerObject.GetComponent<GarbageManager>();*/
+        if(SceneManagerHelper.ActiveSceneBuildIndex == 1)
+            garbageManager = GameObject.FindGameObjectWithTag("garbage manager").GetComponent<GarbageManager>();
+
+        //show player message
+        GameObject playerMessager = Instantiate(playerMessagePrefab, new Vector3(0, 5, 0), Quaternion.identity) as GameObject;
+        playerMessager.transform.SetParent(GameObject.FindGameObjectWithTag("Canvas").transform, false);
+        messageUI = playerMessager.GetComponent<TMP_Text>();
+        Debug.Log(messageUI.text);
+    }
 
     void InitHealthBar(HealthBar _healthbar)
     {
@@ -234,5 +287,4 @@ public class PlayerController : MonoBehaviourPunCallbacks
         healthBar.SetMaxHealth(maxHealth);
         currentHealth = maxHealth;
     }
-
 }
