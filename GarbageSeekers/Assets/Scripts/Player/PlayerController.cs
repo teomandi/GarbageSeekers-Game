@@ -119,6 +119,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     {
         if (Input.GetKeyDown(KeyCode.Space) && grounded)
         {
+            Debug.Log("?????" + jumpForce);
             rb.AddForce(transform.up * jumpForce);
         }
     }
