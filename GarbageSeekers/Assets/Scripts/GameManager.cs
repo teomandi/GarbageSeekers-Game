@@ -37,11 +37,11 @@ public class GameManager : MonoBehaviour
         /*Time.timeScale = 0f;*/
 
     }
-
+/*
     public static void LaodLevel2()
     {
         PhotonNetwork.LoadLevel(1);
-    }
+    }*/
 
 
 

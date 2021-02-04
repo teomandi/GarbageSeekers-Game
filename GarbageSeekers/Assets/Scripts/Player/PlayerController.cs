@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     [SerializeField] Item[] items;
     [SerializeField] int maxHealth, deathPenalty;
     [SerializeField] int currentHealth, minimumY;
-
+    public bool playingPuzzle = false;
     int itemIndex;
     int previousItemIndex = -1;
 
@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     Vector3 moveAmount;
 
     Rigidbody rb;
-    PhotonView PV;
+    public PhotonView PV;
 
     HealthBar healthBar;
     GarbageManager garbageManager;
@@ -65,8 +65,10 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     private void Update()
     {
-/*        if (!PV.IsMine) //<-------------------------
-            return;*/
+        /*        if (!PV.IsMine) //<-------------------------
+                    return;*/
+        if (playingPuzzle)
+            return;
         Look();
         Move();
         Jump();
