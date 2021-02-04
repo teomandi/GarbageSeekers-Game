@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 733991414168863294}
   - component: {fileID: 5807001294969322512}
   - component: {fileID: 5041673352634331}
-  - component: {fileID: 5753399008572649866}
   m_Layer: 0
   m_Name: TrashbinRed (17)
   m_TagString: Untagged
@@ -113,22 +112,6 @@ MonoBehaviour:
   value: 8
   MineObjDelay: 1
   MineObj: {fileID: 3655613488807663064, guid: c3b1973031a98fe40a9fba20b12a6baf, type: 3}
---- !u!114 &5753399008572649866
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1302524637882283746}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 82cfcdf0308e65c4fbe9dbf372d9038d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  resourceHP: 150
-  value: 8
-  MineObjDelay: 1
-  MineObj: {fileID: 0}
 --- !u!1 &3187854280535785006
 GameObject:
   m_ObjectHideFlags: 0

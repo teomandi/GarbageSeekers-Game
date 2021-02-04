@@ -44,10 +44,10 @@ public class PlayerController : MonoBehaviourPunCallbacks
     }
     private void Start()
     {
-        /*        SetupPlayerUI(); //<-------------------------only for test
-                EquipItem(0);
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;*/
+        SetupPlayerUI(); //<-------------------------only for test
+        EquipItem(0);
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
 
         if (PV.IsMine)
         {
@@ -56,17 +56,17 @@ public class PlayerController : MonoBehaviourPunCallbacks
             SetupPlayerUI();
             EquipItem(0);
         }
-        else //<-------------------------
+/*        else //<-------------------------
         {
             Destroy(GetComponentInChildren<Camera>().gameObject);
             Destroy(rb);
-        }
+        }*/
     }
 
     private void Update()
     {
-        if (!PV.IsMine) //<-------------------------
-            return;
+/*        if (!PV.IsMine) //<-------------------------
+            return;*/
         Look();
         Move();
         Jump();
@@ -155,8 +155,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     private void FixedUpdate()
     {
-        if (!PV.IsMine)  //<-------------------------
-            return;
+/*        if (!PV.IsMine)  //<-------------------------
+            return;*/
         rb.MovePosition(rb.position + transform.TransformDirection(moveAmount) * Time.fixedDeltaTime);
     }
 
@@ -265,12 +265,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
         GameObject crossHaiObject = Instantiate(crossHairPrefab, Vector3.zero, Quaternion.identity) as GameObject;
         crossHaiObject.transform.SetParent(GameObject.FindGameObjectWithTag("Canvas").transform, false);
 
-
-        //show garbage manager
-        //GameObject garbageManagerObject = Instantiate(garbageManagerPrefab, Vector3.zero, Quaternion.identity) as GameObject;
-        /*        GameObject garbageManagerObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "GarbageManager"), Vector3.zero, Quaternion.identity) as GameObject;
-                garbageManagerObject.transform.SetParent(GameObject.FindGameObjectWithTag("Canvas").transform, false);
-        garbageManager = garbageManagerObject.GetComponent<GarbageManager>();*/
         if(SceneManagerHelper.ActiveSceneBuildIndex == 1)
             garbageManager = GameObject.FindGameObjectWithTag("garbage manager").GetComponent<GarbageManager>();
 
