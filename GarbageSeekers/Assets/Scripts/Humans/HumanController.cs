@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using System;
+using Photon.Pun;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(Animator))]
@@ -135,6 +136,8 @@ public class HumanController : MonoBehaviour
 
     public void applyStop(bool _isStopped)
     {
+        if (SceneManagerHelper.ActiveSceneBuildIndex != 1)
+            return;
         agent.isStopped = _isStopped;
         isAttacking = false;
         CancelInvoke();

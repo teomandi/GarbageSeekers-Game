@@ -6,18 +6,17 @@ using TMPro;
 public class PuzzleController : MonoBehaviour
 {
 
-    [SerializeField] string name, quoate;
+    [SerializeField] string puzzleName, quoate;
     [SerializeField] GameObject puzzleObject;
-    
-    bool isActive = false, messageOn = false;
-    PlayerController player;
-    GameObject playerCamera;
     [SerializeField] GameObject puzzleCamera;
 
-    private void Awake()
-    {
-        /*puzzleCamera = GameObject.Find("PuzzleCamera");*/
-    }
+
+    bool isActive = false, messageOn = false; 
+    public bool isComplete = false;
+
+    PlayerController player;
+    GameObject playerCamera;
+
 
     private void OnTriggerEnter(Collider other)
     {
@@ -25,10 +24,8 @@ public class PuzzleController : MonoBehaviour
         {
             if (other.gameObject.tag == "player")
             {
-                Debug.Log("Platyer Entered the trigger!!!");
                 player = other.gameObject.GetComponent<PlayerController>();
-
-                if (!player.PV.IsMine) //<--------------on multiplayer need fix
+                if (player.PV.IsMine) //<--------------on multiplayer need fix
                 {
                     playerCamera = other.transform.Find("CameraHolder").Find("Camera").gameObject;
                     player.SetMessage("Pree E to " + quoate, Color.white);
@@ -45,7 +42,7 @@ public class PuzzleController : MonoBehaviour
         {
             player.SetMessage("", Color.white);
             messageOn = false;
-            player = null;
+            //player = null;
         }
     }
 
@@ -56,9 +53,9 @@ public class PuzzleController : MonoBehaviour
             OpenPuzzle();
             
         }
-        if(isActive && Input.GetKeyDown(KeyCode.Escape) && false)
+        if(isActive && Input.GetKeyDown(KeyCode.Escape))
         {
-            ClosePuzzle();
+            ClosePuzzle(false);
         }
     }
 
@@ -74,7 +71,7 @@ public class PuzzleController : MonoBehaviour
         Debug.Log("puzzle opened");
     }
 
-    void ClosePuzzle()
+    public void ClosePuzzle(bool complete)
     {
         isActive = false;
 
@@ -84,6 +81,10 @@ public class PuzzleController : MonoBehaviour
 
         puzzleObject.SetActive(false);
         Debug.Log("puzzle closed!");
+
+        isComplete = complete;
+
+
     }
 
 

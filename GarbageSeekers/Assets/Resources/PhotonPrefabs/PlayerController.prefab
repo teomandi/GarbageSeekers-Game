@@ -373,16 +373,16 @@ MonoBehaviour:
   deathPenalty: -30
   currentHealth: 0
   minimumY: -10
-  playingPuzzle: 0
   PV: {fileID: 0}
   healthBarPrefab: {fileID: 1867158811549984631, guid: f3e51f8003b8c5f42ae2c5130577578e,
     type: 3}
+  healthBarObject: {fileID: 0}
   crossHairPrefab: {fileID: 2668564357694171144, guid: 4258227c2587fd745a6bef1304259c66,
     type: 3}
-  garbageManagerPrefab: {fileID: 5574298143572657551, guid: 1059844f39b3a204ebd812471bc449c7,
-    type: 3}
+  crossHairObject: {fileID: 0}
   playerMessagePrefab: {fileID: 2194122453291218766, guid: d41b62e863416a64c86df90994e85ccc,
     type: 3}
+  playerMessageObject: {fileID: 0}
 --- !u!54 &1614526629690293882
 Rigidbody:
   m_ObjectHideFlags: 0
