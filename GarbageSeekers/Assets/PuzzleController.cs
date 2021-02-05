@@ -8,8 +8,10 @@ public class PuzzleController : MonoBehaviour
 
     [SerializeField] string name, quoate;
     [SerializeField] GameObject puzzleObject;
+    [SerializeField] Camera puzzleCamera;
     bool isActive = false, messageOn = false;
     private PlayerController player;
+    private Camera playerCamera;
 
 
     private void OnTriggerEnter(Collider other)
@@ -20,8 +22,10 @@ public class PuzzleController : MonoBehaviour
             {
                 Debug.Log("Platyer Entered the trigger!!!");
                 player = other.gameObject.GetComponent<PlayerController>();
+
                 if (!player.PV.IsMine) //<--------------on multiplayer need fix
                 {
+                    playerCamera = other.transform.Find("CameraHolder").Find("Camera").GetComponent<Camera>();
                     player.SetMessage("Pree E to " + quoate, Color.white);
                     messageOn = true;
                 }
@@ -56,7 +60,11 @@ public class PuzzleController : MonoBehaviour
     void OpenPuzzle()
     {
         isActive = true;
+
         player.playingPuzzle = true;
+        playerCamera.enabled = false;
+        puzzleCamera.enabled = true;
+
         puzzleObject.SetActive(true);
         Debug.Log("puzzle opened");
     }
@@ -64,7 +72,11 @@ public class PuzzleController : MonoBehaviour
     void ClosePuzzle()
     {
         isActive = false;
+
         player.playingPuzzle = false;
+        playerCamera.enabled = true;
+        puzzleCamera.enabled = false;
+
         puzzleObject.SetActive(false);
         Debug.Log("puzzle closed!");
     }
