@@ -8,11 +8,16 @@ public class PuzzleController : MonoBehaviour
 
     [SerializeField] string name, quoate;
     [SerializeField] GameObject puzzleObject;
-    [SerializeField] Camera puzzleCamera;
+    
     bool isActive = false, messageOn = false;
-    private PlayerController player;
-    private Camera playerCamera;
+    PlayerController player;
+    GameObject playerCamera;
+    [SerializeField] GameObject puzzleCamera;
 
+    private void Awake()
+    {
+        /*puzzleCamera = GameObject.Find("PuzzleCamera");*/
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -25,7 +30,7 @@ public class PuzzleController : MonoBehaviour
 
                 if (!player.PV.IsMine) //<--------------on multiplayer need fix
                 {
-                    playerCamera = other.transform.Find("CameraHolder").Find("Camera").GetComponent<Camera>();
+                    playerCamera = other.transform.Find("CameraHolder").Find("Camera").gameObject;
                     player.SetMessage("Pree E to " + quoate, Color.white);
                     messageOn = true;
                 }
@@ -51,7 +56,7 @@ public class PuzzleController : MonoBehaviour
             OpenPuzzle();
             
         }
-        if(isActive && Input.GetKeyDown(KeyCode.Escape))
+        if(isActive && Input.GetKeyDown(KeyCode.Escape) && false)
         {
             ClosePuzzle();
         }
@@ -61,9 +66,9 @@ public class PuzzleController : MonoBehaviour
     {
         isActive = true;
 
-        player.playingPuzzle = true;
-        playerCamera.enabled = false;
-        puzzleCamera.enabled = true;
+        player.setPuzzleMode(true);
+        playerCamera.SetActive(false);
+        puzzleCamera.SetActive(true);
 
         puzzleObject.SetActive(true);
         Debug.Log("puzzle opened");
@@ -73,9 +78,9 @@ public class PuzzleController : MonoBehaviour
     {
         isActive = false;
 
-        player.playingPuzzle = false;
-        playerCamera.enabled = true;
-        puzzleCamera.enabled = false;
+        player.setPuzzleMode(false);
+        playerCamera.SetActive(true);
+        puzzleCamera.SetActive(false);
 
         puzzleObject.SetActive(false);
         Debug.Log("puzzle closed!");
