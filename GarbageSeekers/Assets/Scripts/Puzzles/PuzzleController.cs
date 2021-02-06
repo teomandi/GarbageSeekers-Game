@@ -25,11 +25,14 @@ public class PuzzleController : MonoBehaviour
             if (other.gameObject.tag == "player")
             {
                 player = other.gameObject.GetComponent<PlayerController>();
-                if (player.PV.IsMine) //<--------------on multiplayer need fix
+                if (!player.PV.IsMine) //<--------------on multiplayer need fix
                 {
                     playerCamera = other.transform.Find("CameraHolder").Find("Camera").gameObject;
                     player.SetMessage("Pree E to " + quoate, Color.white);
                     messageOn = true;
+
+                    Debug.Log("mes: " + messageOn);
+
                 }
             }
 
@@ -50,6 +53,7 @@ public class PuzzleController : MonoBehaviour
     {
         if(messageOn && Input.GetKeyDown(KeyCode.E))
         {
+            Debug.Log("EEEE WAS CLICKED");
             OpenPuzzle();
             
         }
@@ -86,8 +90,5 @@ public class PuzzleController : MonoBehaviour
 
 
     }
-
-
-
 
 }

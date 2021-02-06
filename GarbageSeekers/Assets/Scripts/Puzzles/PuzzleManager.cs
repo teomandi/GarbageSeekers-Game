@@ -14,6 +14,7 @@ public class PuzzleManager : MonoBehaviour
     [SerializeField] TMP_Text scoreText;
     [SerializeField] GameObject[] puzzleObjects;
     [SerializeField] Material completeMaterial;
+    [SerializeField] GameObject winMesg;
 
     PhotonView PV;
     bool[] completePuzzle;
@@ -39,15 +40,17 @@ public class PuzzleManager : MonoBehaviour
                 if (puzzleObjects[i].GetComponent<PuzzleController>().isComplete)
                 {
                     completePuzzle[i] = true;
-                    PV.RPC("RPCCompletePuzzle", RpcTarget.All, new object[] { i });
-                    /*RPCCompletePuzzle(i);*/
+                    /*PV.RPC("RPCCompletePuzzle", RpcTarget.All, new object[] { i });*/
+                    RPCCompletePuzzle(i);
                 }
 
             }
         }
         if (completePuzzle.All(x => x))
         {
-            Debug.Log("game Complete!");
+            winMesg.SetActive(true);
+            if (PhotonNetwork.IsMasterClient)
+                Invoke("LoadMenu", 10f);
         }
 
 
@@ -65,5 +68,11 @@ public class PuzzleManager : MonoBehaviour
     void SetScore()
     {
         scoreText.text = completePuzzlesCounter + "/" + puzzleObjects.Length;
+    }
+
+    private void LoadMenu()
+    {
+
+        PhotonNetwork.LoadLevel(0);
     }
 }
