@@ -43,10 +43,10 @@ public class PlayerController : MonoBehaviourPunCallbacks
     }
     private void Start()
     {
-        /*        SetupPlayerUI(); //<-------------------------only for test
-                EquipItem(0);
-                Cursor.lockState = CursorLockMode.Locked; //<------ no on scene2
-                Cursor.visible = false;*/
+/*        SetupPlayerUI(); //<-------------------------only for test
+        EquipItem(0);
+        Cursor.lockState = CursorLockMode.Locked; //<------ no on scene2
+        Cursor.visible = false;*/
 
         if (PV.IsMine)
         {
@@ -77,7 +77,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         Fire();
         if(transform.position.y < minimumY)
             GameManager.RestorePlayer(gameObject);
-        if (Input.GetKeyUp(KeyCode.LeftShift))
+        if (Input.GetKeyUp(KeyCode.H))
             TakeDamage(-5); //this is gain ;p
 
         //items handle from numbers
@@ -295,8 +295,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
         crossHairObject.SetActive(!flag);
         playerMessageObject.SetActive(!flag);
         // cursor
-/*        Cursor.visible = flag;
-        if (flag)
+        Cursor.visible = flag;
+        if (!flag)
         {
             Cursor.lockState = CursorLockMode.Locked;
         }
@@ -305,7 +305,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
             Cursor.lockState = CursorLockMode.None;
             Cursor.lockState = CursorLockMode.Confined;
 
-        }*/
+        }
 
     }
 }

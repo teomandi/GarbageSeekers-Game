@@ -7059,7 +7059,7 @@ PrefabInstance:
     - target: {fileID: 3778224469220005562, guid: d3fe3d703b38ffe42992cbbce4012a55,
         type: 3}
       propertyPath: possibility
-      value: 0.1
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 4028472247818106877, guid: d3fe3d703b38ffe42992cbbce4012a55,
         type: 3}

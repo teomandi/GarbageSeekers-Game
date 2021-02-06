@@ -5,6 +5,7 @@ using TMPro;
 using Photon.Pun;
 using Photon.Realtime;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 
 [RequireComponent(typeof(PhotonView))]
@@ -49,8 +50,7 @@ public class PuzzleManager : MonoBehaviour
         if (completePuzzle.All(x => x))
         {
             winMesg.SetActive(true);
-            if (PhotonNetwork.IsMasterClient)
-                Invoke("LoadMenu", 10f);
+            Invoke("LoadMenu", 10f);
         }
 
 
@@ -72,7 +72,9 @@ public class PuzzleManager : MonoBehaviour
 
     private void LoadMenu()
     {
-
-        PhotonNetwork.LoadLevel(0);
+        PhotonNetwork.LeaveRoom();
+        if (PhotonNetwork.IsMasterClient)
+            PhotonNetwork.Disconnect();
+        SceneManager.LoadScene(0);
     }
 }
