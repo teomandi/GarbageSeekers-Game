@@ -40,8 +40,8 @@ public class PuzzleManager : MonoBehaviour
                 if (puzzleObjects[i].GetComponent<PuzzleController>().isComplete)
                 {
                     completePuzzle[i] = true;
-                    /*PV.RPC("RPCCompletePuzzle", RpcTarget.All, new object[] { i });*/
-                    RPCCompletePuzzle(i);
+                    PV.RPC("RPCCompletePuzzle", RpcTarget.All, new object[] { i });
+                    /*RPCCompletePuzzle(i);*/
                 }
 
             }

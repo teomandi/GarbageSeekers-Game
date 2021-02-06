@@ -25,7 +25,7 @@ public class PuzzleController : MonoBehaviour
             if (other.gameObject.tag == "player")
             {
                 player = other.gameObject.GetComponent<PlayerController>();
-                if (!player.PV.IsMine) //<--------------on multiplayer need fix
+                if (player.PV.IsMine) //<--------------on multiplayer need fix (should be true)
                 {
                     playerCamera = other.transform.Find("CameraHolder").Find("Camera").gameObject;
                     player.SetMessage("Pree E to " + quoate, Color.white);
