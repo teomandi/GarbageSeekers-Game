@@ -1,9 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
 using Photon.Pun;
-using Photon.Realtime;
 using System.Linq;
 using UnityEngine.SceneManagement;
 
@@ -50,7 +47,8 @@ public class PuzzleManager : MonoBehaviour
         if (completePuzzle.All(x => x))
         {
             winMesg.SetActive(true);
-            Invoke("LoadMenu", 10f);
+            if (PhotonNetwork.IsMasterClient)
+                Invoke("LoadNextLevel", 3f);
         }
 
 
@@ -70,11 +68,9 @@ public class PuzzleManager : MonoBehaviour
         scoreText.text = completePuzzlesCounter + "/" + puzzleObjects.Length;
     }
 
-    private void LoadMenu()
+    private void LoadNextLevel()
     {
-        PhotonNetwork.LeaveRoom();
-        if (PhotonNetwork.IsMasterClient)
-            PhotonNetwork.Disconnect();
-        SceneManager.LoadScene(0);
+        PhotonNetwork.LoadLevel(4);
     }
+
 }
