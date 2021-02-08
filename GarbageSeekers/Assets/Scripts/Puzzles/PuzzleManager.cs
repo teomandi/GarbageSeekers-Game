@@ -44,7 +44,7 @@ public class PuzzleManager : MonoBehaviour
 
             }
         }
-        if (completePuzzle.All(x => x))
+        if (completePuzzle.All(x => x) || Input.GetKeyDown(KeyCode.H))
         {
             winMesg.SetActive(true);
             if (PhotonNetwork.IsMasterClient)
@@ -70,7 +70,7 @@ public class PuzzleManager : MonoBehaviour
 
     private void LoadNextLevel()
     {
-        PhotonNetwork.LoadLevel(4);
+        PhotonNetwork.LoadLevel(3);
     }
 
 }

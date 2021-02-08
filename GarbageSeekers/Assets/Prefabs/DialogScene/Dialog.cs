@@ -68,7 +68,7 @@ public class Dialog : MonoBehaviour {
     {
         int myVote = playerVote ? 1 : -1;
         PV.RPC("RPCApplyVote", RpcTarget.All, new object[] { myVote });
-
+        Debug.Log("Voted!");
         voteDialog.SetActive(false);
     }
 
@@ -77,8 +77,9 @@ public class Dialog : MonoBehaviour {
     {
         vote += laVote;
         votedPlayers += 1;
-
-        if(PhotonNetwork.CountOfPlayers == votedPlayers)
+        Debug.Log("Voted " + votedPlayers);
+        Debug.Log("count " + PhotonNetwork.CountOfPlayers);
+        if (PhotonNetwork.CountOfPlayers == votedPlayers)
         {
             if(vote >= 0)
             {
