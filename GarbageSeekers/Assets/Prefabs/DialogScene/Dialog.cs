@@ -25,6 +25,8 @@ public class Dialog : MonoBehaviour {
     {
         Cursor.lockState = CursorLockMode.None;
         Cursor.lockState = CursorLockMode.Confined;
+        Cursor.visible = true;
+
         PV = gameObject.GetComponent<PhotonView>();
         StartCoroutine(Type());
 
@@ -35,6 +37,10 @@ public class Dialog : MonoBehaviour {
         if (textDisplay.text == sentences[index])
         {
             continueButton.SetActive(true);
+        }
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            SetVote(true);
         }
     }
 

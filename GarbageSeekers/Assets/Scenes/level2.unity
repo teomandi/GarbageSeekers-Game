@@ -1690,10 +1690,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'You Won!
-
-
-    Game Completed
+  m_text: 'All Puzzles Completed
 
 '
   m_isRightToLeft: 0
