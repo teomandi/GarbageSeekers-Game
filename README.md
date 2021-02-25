@@ -39,8 +39,10 @@ Packages that should be imported in order to build the Game
 
 ---
 
-# Gallery
+# Doanload the Game
 
-## Menu
+Wanna play the game? You can download it from [here](https://drive.google.com/file/d/1XkneH2OEOST_-KWWaVysgVBrGSdpDUWC/view?usp=sharing)
 
-![menu image](Gallery/menu0.png =200x80) ![menu image2](Gallery/menu.png=200x80)
+
+
+
