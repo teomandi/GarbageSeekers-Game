@@ -43,6 +43,12 @@ Packages that should be imported in order to build the Game
 
 Wanna play the game? You can download it from [here](https://drive.google.com/file/d/1XkneH2OEOST_-KWWaVysgVBrGSdpDUWC/view?usp=sharing)
 
+# Music Credits
+
+- Menu song: [Sci-Fi Music — Deep Cosmos Beats — Futuristic Chillstep Mix](https://youtu.be/VslI_7VEhck)
+- Garbage collection scene: [Chill Summer Video Game Music](https://www.youtube.com/watch?v=K03UnwKedvg&ab_channel=SuperMediaAllStars)
+
+
 # Gallery
 
 ## Menu 
