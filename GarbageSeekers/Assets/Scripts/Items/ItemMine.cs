@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Photon.Pun;
 
 public class ItemMine : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class ItemMine : MonoBehaviour
 
     void OnParticleCollision(GameObject other)
     {
+
         resourceHP -= 1;
         if (MineObjDelay)
         {
@@ -39,6 +41,8 @@ public class ItemMine : MonoBehaviour
         if (resourceHP < 1)
         {
             Destroy(gameObject);
+            if (SceneManagerHelper.ActiveSceneBuildIndex != 1)
+                return;
             GarbageManager garbageManager = GameObject.FindGameObjectWithTag("garbage manager").GetComponent<GarbageManager>();
             if(garbageManager !=null)
                 garbageManager.IncreaseGarbage(value); 

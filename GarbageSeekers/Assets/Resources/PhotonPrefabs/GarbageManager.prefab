@@ -125,7 +125,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbb644363c7d7b441aa5c3177cde4c93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  totalGarbage: 100
+  totalGarbage: 300
   currentGarbage: 0
   garbageText: {fileID: 7254493108380720334}
 --- !u!114 &3603459381800434680

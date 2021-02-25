@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using System;
+using Photon.Pun;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(Animator))]
@@ -135,6 +136,8 @@ public class HumanController : MonoBehaviour
 
     public void applyStop(bool _isStopped)
     {
+        if (SceneManagerHelper.ActiveSceneBuildIndex != 1)
+            return;
         agent.isStopped = _isStopped;
         isAttacking = false;
         CancelInvoke();
@@ -196,7 +199,7 @@ public class HumanController : MonoBehaviour
             Array.Sort(distances, points);
             movePointA = points[0].transform;
             movePointB = points[(int)(points.Length / 2)].transform;
-            if (hobbyID < 5)
+            if (hobbyID % 10 < 5)
             {
                 //walk
                 isWalking = true;
@@ -211,7 +214,7 @@ public class HumanController : MonoBehaviour
         {
             //sit or chill
             GameObject[] points;
-            if (hobbyID < 5)
+            if (hobbyID % 10 < 5)
             {
                 //sit
                 isSiting = true;

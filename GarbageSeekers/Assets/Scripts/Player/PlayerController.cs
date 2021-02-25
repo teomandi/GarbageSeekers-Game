@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     [SerializeField] Item[] items;
     [SerializeField] int maxHealth, deathPenalty;
     [SerializeField] int currentHealth, minimumY;
-
+    bool playingPuzzle = false;
     int itemIndex;
     int previousItemIndex = -1;
 
@@ -25,16 +25,15 @@ public class PlayerController : MonoBehaviourPunCallbacks
     Vector3 moveAmount;
 
     Rigidbody rb;
-    PhotonView PV;
+    public PhotonView PV;
 
     HealthBar healthBar;
     GarbageManager garbageManager;
     TMP_Text messageUI;
 
-    [SerializeField] GameObject healthBarPrefab;
-    [SerializeField] GameObject crossHairPrefab;
-    [SerializeField] GameObject garbageManagerPrefab;
-    [SerializeField] GameObject playerMessagePrefab;
+    [SerializeField] GameObject healthBarPrefab, healthBarObject;
+    [SerializeField] GameObject crossHairPrefab, crossHairObject;
+    [SerializeField] GameObject playerMessagePrefab, playerMessageObject;
 
 
     private void Awake()
@@ -44,15 +43,18 @@ public class PlayerController : MonoBehaviourPunCallbacks
     }
     private void Start()
     {
-        /*        SetupPlayerUI(); //<-------------------------only for test
-                EquipItem(0);
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;*/
+/*        SetupPlayerUI(); //<-------------------------only for test
+        EquipItem(0);
+        Cursor.lockState = CursorLockMode.Locked; //<------ no on scene2
+        Cursor.visible = false;*/
 
         if (PV.IsMine)
         {
-            Cursor.lockState = CursorLockMode.Locked;
-            /*Cursor.visible = false;*/
+            if (SceneManagerHelper.ActiveSceneBuildIndex == 1)
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
             SetupPlayerUI();
             EquipItem(0);
         }
@@ -67,13 +69,15 @@ public class PlayerController : MonoBehaviourPunCallbacks
     {
         if (!PV.IsMine) //<-------------------------
             return;
+        if (playingPuzzle)
+            return;
         Look();
         Move();
         Jump();
         Fire();
         if(transform.position.y < minimumY)
             GameManager.RestorePlayer(gameObject);
-        if (Input.GetKeyUp(KeyCode.LeftShift))
+        if (Input.GetKeyUp(KeyCode.H))
             TakeDamage(-5); //this is gain ;p
 
         //items handle from numbers
@@ -257,27 +261,21 @@ public class PlayerController : MonoBehaviourPunCallbacks
     {
         //show health-bar
         Vector3 healtBarOffset = new Vector3(-55, -30, 0);
-        GameObject healthBarObject = Instantiate(healthBarPrefab, healtBarOffset, Quaternion.identity) as GameObject;
+        healthBarObject = Instantiate(healthBarPrefab, healtBarOffset, Quaternion.identity) as GameObject;
         healthBarObject.transform.SetParent(GameObject.FindGameObjectWithTag("Canvas").transform, false);
         InitHealthBar(healthBarObject.GetComponent<HealthBar>());
 
         //show crosshair
-        GameObject crossHaiObject = Instantiate(crossHairPrefab, Vector3.zero, Quaternion.identity) as GameObject;
-        crossHaiObject.transform.SetParent(GameObject.FindGameObjectWithTag("Canvas").transform, false);
+        crossHairObject = Instantiate(crossHairPrefab, Vector3.zero, Quaternion.identity) as GameObject;
+        crossHairObject.transform.SetParent(GameObject.FindGameObjectWithTag("Canvas").transform, false);
 
-
-        //show garbage manager
-        //GameObject garbageManagerObject = Instantiate(garbageManagerPrefab, Vector3.zero, Quaternion.identity) as GameObject;
-        /*        GameObject garbageManagerObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "GarbageManager"), Vector3.zero, Quaternion.identity) as GameObject;
-                garbageManagerObject.transform.SetParent(GameObject.FindGameObjectWithTag("Canvas").transform, false);
-        garbageManager = garbageManagerObject.GetComponent<GarbageManager>();*/
         if(SceneManagerHelper.ActiveSceneBuildIndex == 1)
             garbageManager = GameObject.FindGameObjectWithTag("garbage manager").GetComponent<GarbageManager>();
 
         //show player message
-        GameObject playerMessager = Instantiate(playerMessagePrefab, new Vector3(0, 5, 0), Quaternion.identity) as GameObject;
-        playerMessager.transform.SetParent(GameObject.FindGameObjectWithTag("Canvas").transform, false);
-        messageUI = playerMessager.GetComponent<TMP_Text>();
+        playerMessageObject = Instantiate(playerMessagePrefab, new Vector3(0, 5, 0), Quaternion.identity) as GameObject;
+        playerMessageObject.transform.SetParent(GameObject.FindGameObjectWithTag("Canvas").transform, false);
+        messageUI = playerMessageObject.GetComponent<TMP_Text>();
         Debug.Log(messageUI.text);
     }
 
@@ -286,5 +284,28 @@ public class PlayerController : MonoBehaviourPunCallbacks
         healthBar = _healthbar;
         healthBar.SetMaxHealth(maxHealth);
         currentHealth = maxHealth;
+    }
+
+    public void setPuzzleMode(bool flag)
+    {
+        // disable movement
+        playingPuzzle = flag;
+        // clear the canvas
+        healthBarObject.SetActive(!flag);
+        crossHairObject.SetActive(!flag);
+        playerMessageObject.SetActive(!flag);
+        // cursor
+        Cursor.visible = flag;
+        if (!flag)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.lockState = CursorLockMode.Confined;
+
+        }
+
     }
 }

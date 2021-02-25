@@ -35,3 +35,4 @@ Packages that should be imported in order to build the Game
 - Death_Artisan\Free Tees
 - MASH Virtual (the collector gun)
 - simple modular human
+- LeanTween

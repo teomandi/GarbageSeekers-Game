@@ -27,6 +27,10 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     void Start()
     {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.lockState = CursorLockMode.Confined;
+        Cursor.visible = true;
+
         Debug.Log("Connecting to Master");
         PhotonNetwork.ConnectUsingSettings(); //connect to the photon master service
     }
