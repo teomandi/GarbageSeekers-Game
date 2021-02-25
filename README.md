@@ -46,24 +46,25 @@ Wanna play the game? You can download it from [here](https://drive.google.com/fi
 # Gallery
 
 ## Menu 
-[menu image](Gallery/menu0.png)
-[menu image2](Gallery/menu.png)
+
+![menu image](Gallery/menu0.png)
+![menu image2](Gallery/menu.png)
 
 ## Scene 1 - Garbage Collection
 
-[menu image2](Gallery/in-game.png)
-[menu image2](Gallery/in-game2.png)
-[menu image2](Gallery/in-game3.png)
-[menu image2](Gallery/in-game4.png)
+![menu image2](Gallery/in-game.png)
+![menu image2](Gallery/in-game2.png)
+![menu image2](Gallery/in-game3.png)
+![menu image2](Gallery/in-game4.png)
 
 ## Scene 2- Spaceship
 
-[menu image2](Gallery/in-game5.png)
-[menu image2](Gallery/in-game6.png)
-[menu image2](Gallery/in-game7.png)
+![menu image2](Gallery/in-game5.png)
+![menu image2](Gallery/in-game6.png)
+![menu image2](Gallery/in-game7.png)
 
 ## Scene 3- Dialog Scene
 
-[menu image2](Gallery/in-game8.png)
+![menu image2](Gallery/in-game8.png)
 
 
