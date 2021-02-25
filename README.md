@@ -43,4 +43,4 @@ Packages that should be imported in order to build the Game
 
 ## Menu
 
-![menu image](Gallery/menu0.png)  ![menu image2](Gallery/menu.png)
+![menu image](Gallery/menu0.png =200x80) ![menu image2](Gallery/menu.png=200x80)
