@@ -39,7 +39,7 @@ Packages that should be imported in order to build the Game
 
 ---
 
-# Doanload the Game
+# Download the Game
 
 Wanna play the game? You can download it from [here](https://drive.google.com/file/d/1XkneH2OEOST_-KWWaVysgVBrGSdpDUWC/view?usp=sharing)
 
